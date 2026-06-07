@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { CreditCard, Wallet, Landmark, CheckCircle, ArrowLeft } from 'lucide-react';
+import { CreditCard, Wallet, Landmark, CheckCircle, ArrowLeft, UploadCloud } from 'lucide-react';
 
 const Checkout = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -12,6 +12,7 @@ const Checkout = () => {
     email: '',
     password: '',
     phone: '',
+    city: '',
     clubName: '',
     plan: initialPlan,
     paymentMethod: 'Credit Card'
@@ -20,7 +21,11 @@ const Checkout = () => {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const [isVerificationStep, setIsVerificationStep] = useState(false);
+  const [step, setStep] = useState(1);
+  const [orderId, setOrderId] = useState(null);
+  const [receiptFile, setReceiptFile] = useState(null);
+  const [paymentMethods, setPaymentMethods] = useState([]);
+  const [offers, setOffers] = useState([]);
   const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
 
   const handleCodeChange = (index, value) => {
@@ -79,8 +84,9 @@ const Checkout = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess('Account verified! Redirecting to login...');
-        setTimeout(() => navigate('/login'), 2000);
+        setOrderId(data.orderId);
+        setSuccess('Account verified! Please proceed to payment proof.');
+        setStep(3);
       } else {
         setError(data.message || 'Verification failed');
       }
@@ -88,13 +94,50 @@ const Checkout = () => {
       setError('Network error during verification.');
     }
   };
-
   // Sync state if search params change
   useEffect(() => {
     const planParam = searchParams.get('plan');
     if (planParam && ['weekly', 'monthly', 'yearly'].includes(planParam)) {
       setFormData(prev => ({ ...prev, plan: planParam }));
     }
+
+    const fetchPaymentMethods = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/payment-methods');
+        if (response.ok) {
+          const data = await response.json();
+          setPaymentMethods(data);
+          if (data.length > 0) {
+            setFormData(prev => ({ ...prev, paymentMethod: data[0].name }));
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch payment methods', err);
+      }
+    };
+
+    const fetchOffers = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/api/offers');
+        if (response.ok) {
+          const data = await response.json();
+          setOffers(data);
+          // If no initialPlan or if initialPlan doesn't match an offer name, default to the first one or the popular one
+          if (data.length > 0) {
+            const hasInitial = data.find(o => o.name === initialPlan);
+            if (!hasInitial) {
+              const popular = data.find(o => o.is_popular);
+              setFormData(prev => ({ ...prev, plan: popular ? popular.name : data[0].name }));
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Failed to fetch offers', err);
+      }
+    };
+    
+    fetchPaymentMethods();
+    fetchOffers();
   }, [searchParams]);
 
   const handleChange = (e) => {
@@ -125,13 +168,43 @@ const Checkout = () => {
 
       if (response.ok) {
         setSuccess('Verification code sent to your email.');
-        setIsVerificationStep(true);
+        setStep(2);
       } else {
         setError(data.message || 'Registration failed');
       }
     } catch (err) {
       console.error(err);
       setError('Network error, make sure backend is running.');
+    }
+  };
+
+  const handleReceiptUpload = async (e) => {
+    e.preventDefault();
+    if (!receiptFile || !orderId) {
+      setError('Please select a file to upload.');
+      return;
+    }
+    setError('');
+    
+    const formDataObj = new FormData();
+    formDataObj.append('receipt', receiptFile);
+    formDataObj.append('orderId', orderId);
+
+    try {
+      const response = await fetch('http://localhost:3000/api/upload-receipt', {
+        method: 'POST',
+        body: formDataObj,
+      });
+
+      if (response.ok) {
+        setSuccess('Receipt uploaded! Your account is pending admin approval.');
+        setTimeout(() => navigate('/login'), 2000);
+      } else {
+        const data = await response.json();
+        setError(data.message || 'Upload failed');
+      }
+    } catch (err) {
+      setError('Network error during upload.');
     }
   };
 
@@ -156,61 +229,33 @@ const Checkout = () => {
             Select an account plan. You can easily switch between plans or cancel at any time inside your settings panel.
           </p>
 
-          {/* Weekly Plan Selectable Row */}
-          <div 
-            className={`plan-horizontal-card ${formData.plan === 'weekly' ? 'active' : ''}`}
-            onClick={() => selectPlan('weekly')}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-              <CheckCircle size={24} color={formData.plan === 'weekly' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)'} style={{ flexShrink: 0 }} />
-              <div>
-                <h4 style={{ fontSize: '1.1rem', textTransform: 'none', letterSpacing: 'normal', fontWeight: 'bold', marginBottom: '0.2rem' }}>Weekly Pass</h4>
-                <p className="text-secondary text-sm">Full dashboard features, billed weekly.</p>
+          {offers.length === 0 ? (
+            <div style={{ color: '#a1a1aa', textAlign: 'center', padding: '2rem' }}>Loading offers...</div>
+          ) : (
+            offers.map((offer) => (
+              <div 
+                key={offer.id}
+                className={`plan-horizontal-card ${formData.plan === offer.name ? 'active' : ''}`}
+                onClick={() => selectPlan(offer.name)}
+                style={{ position: 'relative' }}
+              >
+                {offer.is_popular && (
+                  <div style={{ position: 'absolute', right: '2rem', top: '-10px', background: 'var(--accent-primary)', color: 'black', padding: '1px 8px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>BEST VALUED</div>
+                )}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+                  <CheckCircle size={24} color={formData.plan === offer.name ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)'} style={{ flexShrink: 0 }} />
+                  <div>
+                    <h4 style={{ fontSize: '1.1rem', textTransform: 'none', letterSpacing: 'normal', fontWeight: 'bold', marginBottom: '0.2rem' }}>{offer.name}</h4>
+                    <p className="text-secondary text-sm">{offer.description}</p>
+                  </div>
+                </div>
+                <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                  <span style={{ fontSize: '1.5rem', fontWeight: 900, color: 'white', fontFamily: 'var(--font-title)' }}>${parseFloat(offer.price).toFixed(0)}</span>
+                  <span className="text-secondary text-sm">/{offer.period === 'Weekly' ? 'wk' : offer.period === 'Monthly' ? 'mo' : 'yr'}</span>
+                </div>
               </div>
-            </div>
-            <div style={{ textAlign: 'right', flexShrink: 0 }}>
-              <span style={{ fontSize: '1.5rem', fontWeight: 900, color: 'white', fontFamily: 'var(--font-title)' }}>$9</span>
-              <span className="text-secondary text-sm">/wk</span>
-            </div>
-          </div>
-
-          {/* Monthly Plan Selectable Row */}
-          <div 
-            className={`plan-horizontal-card ${formData.plan === 'monthly' ? 'active' : ''}`}
-            onClick={() => selectPlan('monthly')}
-            style={{ position: 'relative' }}
-          >
-            <div style={{ position: 'absolute', right: '2rem', top: '-10px', background: 'var(--accent-primary)', color: 'black', padding: '1px 8px', borderRadius: '4px', fontSize: '0.65rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>BEST VALUED SEASON</div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-              <CheckCircle size={24} color={formData.plan === 'monthly' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)'} style={{ flexShrink: 0 }} />
-              <div>
-                <h4 style={{ fontSize: '1.1rem', textTransform: 'none', letterSpacing: 'normal', fontWeight: 'bold', marginBottom: '0.2rem' }}>Monthly Season</h4>
-                <p className="text-secondary text-sm">Automated player analytics, billed monthly.</p>
-              </div>
-            </div>
-            <div style={{ textAlign: 'right', flexShrink: 0 }}>
-              <span style={{ fontSize: '1.5rem', fontWeight: 900, color: 'white', fontFamily: 'var(--font-title)' }}>$29</span>
-              <span className="text-secondary text-sm">/mo</span>
-            </div>
-          </div>
-
-          {/* Yearly Plan Selectable Row */}
-          <div 
-            className={`plan-horizontal-card ${formData.plan === 'yearly' ? 'active' : ''}`}
-            onClick={() => selectPlan('yearly')}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-              <CheckCircle size={24} color={formData.plan === 'yearly' ? 'var(--accent-primary)' : 'rgba(255,255,255,0.1)'} style={{ flexShrink: 0 }} />
-              <div>
-                <h4 style={{ fontSize: '1.1rem', textTransform: 'none', letterSpacing: 'normal', fontWeight: 'bold', marginBottom: '0.2rem' }}>Annual Pass</h4>
-                <p className="text-secondary text-sm">Unlimited historical archives, billed yearly.</p>
-              </div>
-            </div>
-            <div style={{ textAlign: 'right', flexShrink: 0 }}>
-              <span style={{ fontSize: '1.5rem', fontWeight: 900, color: 'white', fontFamily: 'var(--font-title)' }}>$290</span>
-              <span className="text-secondary text-sm">/yr</span>
-            </div>
-          </div>
+            ))
+          )}
         </div>
 
         {/* Right Column: Checkout Activation Card */}
@@ -222,10 +267,18 @@ const Checkout = () => {
             Fill in your profile details to create your basketball team hub.
           </p>
           
-          {error && <div className="text-danger mb-4 text-center text-sm bg-bg-secondary p-2.5 rounded" style={{ border: '1px solid rgba(239, 68, 68, 0.2)', color: 'var(--danger)', background: '#1c1313' }}>{error}</div>}
-          {success && <div className="text-success mb-4 text-center text-sm bg-bg-secondary p-2.5 rounded" style={{ border: '1px solid rgba(16, 185, 129, 0.2)', color: 'var(--success)', background: '#131c17' }}>{success}</div>}
+          {error && (
+            <div className="mb-6 text-center rounded-lg" style={{ border: '1px solid rgba(239, 68, 68, 0.3)', color: '#ef4444', background: 'rgba(239, 68, 68, 0.05)', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontWeight: '600', fontSize: '0.95rem' }}>
+              {error}
+            </div>
+          )}
+          {success && (
+            <div className="mb-6 text-center rounded-lg" style={{ border: '1px solid rgba(204, 255, 0, 0.3)', color: 'var(--accent-primary)', background: 'rgba(204, 255, 0, 0.05)', padding: '1rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', fontWeight: '600', fontSize: '0.95rem' }}>
+              <CheckCircle size={18} /> {success}
+            </div>
+          )}
           
-          {isVerificationStep ? (
+          {step === 2 && (
             <div className="flex flex-col gap-6" style={{ alignItems: 'center' }}>
               <p className="text-secondary text-center" style={{ fontSize: '0.95rem' }}>
                 Enter the 6-digit code sent to <strong style={{color:'white'}}>{formData.email}</strong>
@@ -244,7 +297,7 @@ const Checkout = () => {
                     onPaste={handlePaste}
                     style={{
                       width: '48px', height: '56px', fontSize: '1.5rem', textAlign: 'center',
-                      background: '#18181b', border: '1px solid #3f3f46', borderRadius: '8px', color: 'white', outline: 'none'
+                      background: '#121212', border: '1px solid #3f3f46', borderRadius: '8px', color: 'white', outline: 'none'
                     }}
                   />
                 ))}
@@ -253,7 +306,64 @@ const Checkout = () => {
                 Verify & Continue
               </button>
             </div>
-          ) : (
+          )}
+
+          {step === 3 && (
+            <form className="flex flex-col gap-6" onSubmit={handleReceiptUpload}>
+              <div style={{ background: 'rgba(204, 255, 0, 0.05)', border: '1px solid rgba(204, 255, 0, 0.2)', padding: '1.5rem', borderRadius: '12px', textAlign: 'center' }}>
+                <h3 style={{ color: 'white', marginBottom: '0.5rem', fontSize: '1.1rem' }}>Payment Information</h3>
+                <p className="text-secondary" style={{ fontSize: '0.9rem', marginBottom: '1rem' }}>
+                  Please transfer the amount for your selected plan to the following account:
+                </p>
+                <div style={{ background: '#121212', padding: '1rem', borderRadius: '8px', border: '1px solid #3f3f46' }}>
+                  <span style={{ display: 'block', fontSize: '0.8rem', color: '#a1a1aa', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '0.25rem' }}>RIB Number ({formData.paymentMethod})</span>
+                  <span style={{ fontSize: '1.5rem', fontWeight: 'bold', color: 'var(--accent-primary)', letterSpacing: '2px' }}>
+                    {paymentMethods.find(pm => pm.name === formData.paymentMethod)?.rib || '0000 0000 0000 0000 0000'}
+                  </span>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-secondary mb-1.5" style={{ textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em' }}>Upload Receipt</label>
+                <label 
+                  htmlFor="receipt-upload" 
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '2rem',
+                    background: receiptFile ? 'rgba(204, 255, 0, 0.05)' : '#121212',
+                    border: `1px dashed ${receiptFile ? 'var(--accent-primary)' : '#3f3f46'}`,
+                    borderRadius: '8px',
+                    cursor: 'pointer',
+                    transition: 'var(--transition)'
+                  }}
+                  onMouseEnter={(e) => !receiptFile && (e.currentTarget.style.borderColor = '#a1a1aa')}
+                  onMouseLeave={(e) => !receiptFile && (e.currentTarget.style.borderColor = '#3f3f46')}
+                >
+                  <UploadCloud size={32} color={receiptFile ? 'var(--accent-primary)' : '#a1a1aa'} style={{ marginBottom: '1rem' }} />
+                  <span style={{ color: receiptFile ? 'white' : '#a1a1aa', fontSize: '0.9rem', fontWeight: receiptFile ? 'bold' : 'normal', textAlign: 'center' }}>
+                    {receiptFile ? receiptFile.name : 'Click to browse or drag image here'}
+                  </span>
+                  <input 
+                    id="receipt-upload"
+                    type="file" 
+                    accept="image/*"
+                    onChange={(e) => setReceiptFile(e.target.files[0])}
+                    style={{ display: 'none' }}
+                    required 
+                  />
+                </label>
+              </div>
+
+              <button type="submit" className="btn btn-primary w-full text-lg" style={{ padding: '0.95rem 1.5rem', cursor: 'pointer' }}>
+                Submit Payment Proof
+              </button>
+            </form>
+          )}
+
+          {step === 1 && (
             <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
               
               <div className="flex flex-col md:flex-row gap-4" style={{ display: 'flex', width: '100%' }}>
@@ -278,35 +388,34 @@ const Checkout = () => {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-semibold text-secondary mb-1.5" style={{ textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em' }}>Club / Team Name</label>
-                <input type="text" name="clubName" className="input-field" placeholder="E.g., City Tigers" value={formData.clubName} onChange={handleChange} required />
+              <div className="flex flex-col md:flex-row gap-4" style={{ display: 'flex', width: '100%' }}>
+                <div style={{ flex: 1 }}>
+                  <label className="block text-sm font-semibold text-secondary mb-1.5" style={{ textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em' }}>Club / Team Name</label>
+                  <input type="text" name="clubName" className="input-field" placeholder="E.g., City Tigers" value={formData.clubName} onChange={handleChange} required />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label className="block text-sm font-semibold text-secondary mb-1.5" style={{ textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em' }}>City</label>
+                  <input type="text" name="city" className="input-field" placeholder="E.g., New York" value={formData.city} onChange={handleChange} required />
+                </div>
               </div>
 
               <div style={{ marginTop: '0.5rem' }}>
                 <label className="block text-sm font-semibold text-secondary mb-1.5" style={{ textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em' }}>Payment Method</label>
-                <div className="payment-badge-row">
-                  <div 
-                    className={`payment-badge ${formData.paymentMethod === 'Credit Card' ? 'active' : ''}`}
-                    onClick={() => selectPaymentMethod('Credit Card')}
-                  >
-                    <CreditCard size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} /> Credit Card
+                {paymentMethods.length === 0 ? (
+                  <div style={{ color: '#a1a1aa', fontSize: '0.9rem', fontStyle: 'italic' }}>No payment methods available right now.</div>
+                ) : (
+                  <div className="payment-badge-row">
+                    {paymentMethods.map(method => (
+                      <div 
+                        key={method.id}
+                        className={`payment-badge ${formData.paymentMethod === method.name ? 'active' : ''}`}
+                        onClick={() => selectPaymentMethod(method.name)}
+                      >
+                        <Wallet size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} /> {method.name}
+                      </div>
+                    ))}
                   </div>
-                  
-                  <div 
-                    className={`payment-badge ${formData.paymentMethod === 'PayPal' ? 'active' : ''}`}
-                    onClick={() => selectPaymentMethod('PayPal')}
-                  >
-                    <Wallet size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} /> PayPal
-                  </div>
-                  
-                  <div 
-                    className={`payment-badge ${formData.paymentMethod === 'Bank Transfer' ? 'active' : ''}`}
-                    onClick={() => selectPaymentMethod('Bank Transfer')}
-                  >
-                    <Landmark size={14} style={{ marginRight: '6px', verticalAlign: 'middle' }} /> Bank Transfer
-                  </div>
-                </div>
+                )}
               </div>
 
               <button type="submit" className="btn btn-primary mt-6 w-full text-lg" style={{ padding: '0.95rem 1.5rem', cursor: 'pointer' }}>

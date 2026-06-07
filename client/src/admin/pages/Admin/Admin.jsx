@@ -15,14 +15,14 @@ const Admin = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   return (
-    <div style={{ backgroundColor: '#2a2d34', minHeight: '100vh', display: 'flex', padding: '1rem', boxSizing: 'border-box', overflowX: 'hidden' }}>
+    <div style={{ backgroundColor: '#000000', minHeight: '100vh', display: 'flex', padding: '1rem', boxSizing: 'border-box', overflowX: 'hidden' }}>
       <aside style={{ marginRight: '1.5rem' }}>
         <AdminSidebar />
       </aside>
 
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0, width: 'calc(100% - 1.5rem)' }}>
         {/* Top Bar matching screenshot */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#18181b', padding: '0.6rem 1rem', borderRadius: '40px', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#121212', padding: '0.6rem 1rem', borderRadius: '40px', marginBottom: '1.5rem' }}>
           {/* Search Input */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', paddingLeft: '0.5rem', flex: 1 }}>
             <Search size={18} color="#a1a1aa" />
@@ -51,7 +51,7 @@ const Admin = () => {
           </div>
         </div>
 
-        <div style={{ flex: 1, overflowY: 'auto' }}>
+        <div style={{ flex: 1 }}>
           <Routes>
             <Route index element={<Overview />} />
             <Route path="members" element={<Members />} />

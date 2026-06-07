@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { DollarSign, CreditCard, ArrowUpRight } from 'lucide-react';
+import { DollarSign, CreditCard, ArrowUpRight, Search, Calendar, Filter, Layers, Trash2, Plus } from 'lucide-react';
+import PremiumSelect from '../../../components/PremiumSelect';
+import PremiumDatePicker from '../../../components/PremiumDatePicker';
 
 const Income = () => {
   const [orders, setOrders] = useState([]);
+  const [paymentMethods, setPaymentMethods] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   // Filters state
@@ -13,6 +16,24 @@ const Income = () => {
 
   // Reject Modal state
   const [rejectModal, setRejectModal] = useState({ isOpen: false, orderId: null, reason: '' });
+
+  // Payment Methods Modal state
+  const [paymentModalOpen, setPaymentModalOpen] = useState(false);
+  const [newPaymentMethod, setNewPaymentMethod] = useState({ name: '', rib: '' });
+
+  const statusOptions = [
+    { value: 'All', label: 'All Statuses' },
+    { value: 'Pending', label: 'Pending', color: '#f59e0b' },
+    { value: 'Confirmed', label: 'Confirmed', color: '#22c55e' },
+    { value: 'Rejected', label: 'Rejected', color: '#ef4444' }
+  ];
+
+  const planOptions = [
+    { value: 'All', label: 'All Plans' },
+    { value: 'weekly', label: 'Weekly Plan' },
+    { value: 'monthly', label: 'Monthly Plan' },
+    { value: 'yearly', label: 'Yearly Plan' }
+  ];
 
   const fetchOrders = async () => {
     try {
@@ -28,9 +49,56 @@ const Income = () => {
     }
   };
 
+  const fetchPaymentMethods = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api/payment-methods');
+      if (response.ok) {
+        const data = await response.json();
+        setPaymentMethods(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch payment methods:', error);
+    }
+  };
+
   useEffect(() => {
     fetchOrders();
+    fetchPaymentMethods();
   }, []);
+
+  const handleAddPaymentMethod = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://localhost:3000/api/payment-methods', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newPaymentMethod)
+      });
+      if (response.ok) {
+        fetchPaymentMethods();
+        setNewPaymentMethod({ name: '', rib: '' });
+      } else {
+        alert('Failed to add payment method');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Network error');
+    }
+  };
+
+  const handleDeletePaymentMethod = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this payment method?')) return;
+    try {
+      const response = await fetch(`http://localhost:3000/api/payment-methods/${id}`, { method: 'DELETE' });
+      if (response.ok) {
+        fetchPaymentMethods();
+      } else {
+        alert('Failed to delete payment method');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleStatusChange = async (id, newStatus, reason = '') => {
     try {
@@ -87,11 +155,14 @@ const Income = () => {
             Platform <span style={{ color: 'var(--accent-primary)' }}>Income</span>
           </h1>
         </div>
+        <button onClick={() => setPaymentModalOpen(true)} className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.75rem 1.25rem' }}>
+          <CreditCard size={18} /> Manage Payment Methods
+        </button>
       </div>
 
       {/* Top Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
-        <div style={{ backgroundColor: '#18181b', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ backgroundColor: '#121212', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
           <span style={{ color: '#a1a1aa', fontSize: '0.9rem', marginBottom: '1rem' }}>Total Revenue</span>
           <div style={{ fontSize: '2.5rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: 'white' }}>${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 'auto', paddingTop: '1rem' }}>
@@ -100,7 +171,7 @@ const Income = () => {
           </div>
         </div>
 
-        <div style={{ backgroundColor: '#18181b', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ backgroundColor: '#121212', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
           <span style={{ color: '#a1a1aa', fontSize: '0.9rem', marginBottom: '1rem' }}>Total Orders</span>
           <div style={{ fontSize: '2.5rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: 'white' }}>{totalOrdersCount}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 'auto', paddingTop: '1rem' }}>
@@ -109,7 +180,7 @@ const Income = () => {
           </div>
         </div>
 
-        <div style={{ backgroundColor: '#18181b', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
+        <div style={{ backgroundColor: '#121212', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
           <span style={{ color: '#a1a1aa', fontSize: '0.9rem', marginBottom: '1rem' }}>Active Subscriptions</span>
           <div style={{ fontSize: '2.5rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: 'white' }}>{activeSubs}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 'auto', paddingTop: '1rem' }}>
@@ -120,36 +191,36 @@ const Income = () => {
       </div>
 
       {/* Transactions Table */}
-      <div style={{ backgroundColor: '#18181b', borderRadius: '24px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      <div style={{ backgroundColor: '#121212', borderRadius: '24px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
         <h2 style={{ fontSize: '1.2rem', fontWeight: 600, color: 'white' }}>Recent Checkout Orders</h2>
         
         {/* Filters */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', background: '#27272a', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div style={{ flex: '1', minWidth: '200px' }}>
-            <label style={{ display: 'block', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', marginBottom: '0.5rem', fontWeight: 600 }}>Search</label>
-            <input type="text" placeholder="Search by name, email, or ID..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} style={{ width: '100%', padding: '0.6rem 1rem', borderRadius: '8px', border: '1px solid #3f3f46', background: '#18181b', color: 'white', outline: 'none' }} />
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <div style={{ flex: '1', minWidth: '220px' }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', marginBottom: '0.75rem', fontWeight: 600 }}>
+              <Search size={14} color="var(--accent-primary)" /> Search Orders
+            </label>
+            <div style={{ position: 'relative' }}>
+              <input type="text" className="input-field" placeholder="Search by name, email, or ID..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+            </div>
           </div>
           <div style={{ flex: '1', minWidth: '150px' }}>
-            <label style={{ display: 'block', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', marginBottom: '0.5rem', fontWeight: 600 }}>Date</label>
-            <input type="date" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} style={{ width: '100%', padding: '0.6rem 1rem', borderRadius: '8px', border: '1px solid #3f3f46', background: '#18181b', color: 'white', outline: 'none' }} />
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', marginBottom: '0.75rem', fontWeight: 600 }}>
+              <Calendar size={14} color="var(--accent-primary)" /> Order Date
+            </label>
+            <PremiumDatePicker value={dateFilter} onChange={setDateFilter} placeholder="Any Date" />
           </div>
           <div style={{ flex: '1', minWidth: '150px' }}>
-            <label style={{ display: 'block', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', marginBottom: '0.5rem', fontWeight: 600 }}>Status</label>
-            <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} style={{ width: '100%', padding: '0.6rem 1rem', borderRadius: '8px', border: '1px solid #3f3f46', background: '#18181b', color: 'white', outline: 'none' }}>
-              <option value="All">All Statuses</option>
-              <option value="Pending">Pending</option>
-              <option value="Confirmed">Confirmed</option>
-              <option value="Rejected">Rejected</option>
-            </select>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', marginBottom: '0.75rem', fontWeight: 600 }}>
+              <Filter size={14} color="var(--accent-primary)" /> Status Filter
+            </label>
+            <PremiumSelect options={statusOptions} value={statusFilter} onChange={setStatusFilter} placeholder="Select Status" />
           </div>
           <div style={{ flex: '1', minWidth: '150px' }}>
-            <label style={{ display: 'block', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', marginBottom: '0.5rem', fontWeight: 600 }}>Plan</label>
-            <select value={planFilter} onChange={(e) => setPlanFilter(e.target.value)} style={{ width: '100%', padding: '0.6rem 1rem', borderRadius: '8px', border: '1px solid #3f3f46', background: '#18181b', color: 'white', outline: 'none' }}>
-              <option value="All">All Plans</option>
-              <option value="weekly">Weekly Plan</option>
-              <option value="monthly">Monthly Plan</option>
-              <option value="yearly">Yearly Plan</option>
-            </select>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', marginBottom: '0.75rem', fontWeight: 600 }}>
+              <Layers size={14} color="var(--accent-primary)" /> Plan Type
+            </label>
+            <PremiumSelect options={planOptions} value={planFilter} onChange={setPlanFilter} placeholder="Select Plan" />
           </div>
         </div>
 
@@ -174,8 +245,15 @@ const Income = () => {
               ) : filteredOrders.map((order, idx) => (
                 <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
                   <td style={{ padding: '1.25rem 1.5rem', color: '#a1a1aa', fontSize: '0.85rem', fontWeight: 600 }}>#ORD-{order.id.toString().padStart(4, '0')}</td>
-                  <td style={{ padding: '1.25rem 1.5rem', color: 'white', fontWeight: 500 }}>{order.customer_name}</td>
-                  <td style={{ padding: '1.25rem 1.5rem', color: '#a1a1aa' }}>{order.plan}</td>
+                  <td style={{ padding: '1.25rem 1.5rem', color: 'white', fontWeight: 500 }}>
+                    <span className="text-truncate" title={order.customer_name} style={{ maxWidth: '150px' }}>{order.customer_name}</span>
+                  </td>
+                  <td style={{ padding: '1.25rem 1.5rem', color: '#a1a1aa' }}>
+                    <span className="text-truncate" title={order.plan} style={{ maxWidth: '100px' }}>{order.plan}</span>
+                    {order.receipt_image && (
+                      <a href={`http://localhost:3000${order.receipt_image}`} target="_blank" rel="noopener noreferrer" style={{ display: 'block', fontSize: '0.75rem', color: 'var(--accent-primary)', marginTop: '0.25rem', textDecoration: 'underline' }}>View Receipt</a>
+                    )}
+                  </td>
                   <td style={{ padding: '1.25rem 1.5rem', color: 'white', fontWeight: 600 }}>${parseFloat(order.amount).toFixed(2)}</td>
                   <td style={{ padding: '1.25rem 1.5rem' }}>
                     <span style={{
@@ -230,6 +308,59 @@ const Income = () => {
                 Confirm Rejection
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Payment Methods Fullscreen Modal */}
+      {paymentModalOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, overflowY: 'auto', padding: '2rem' }}>
+          <div className="card animate-fade-in" style={{ padding: '3rem', width: '100%', maxWidth: '800px', background: '#121212', border: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
+            <button 
+              onClick={() => setPaymentModalOpen(false)}
+              style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'none', border: 'none', color: '#a1a1aa', fontSize: '1.5rem', cursor: 'pointer' }}
+            >×</button>
+            
+            <h2 style={{ fontSize: '2rem', fontFamily: 'var(--font-title)', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.5rem', color: 'white' }}>
+              Payment Methods
+            </h2>
+            <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Manage the payment methods available for users during checkout.</p>
+            
+            <form onSubmit={handleAddPaymentMethod} style={{ display: 'flex', gap: '1rem', alignItems: 'flex-end', marginBottom: '3rem', background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '12px', border: '1px solid rgba(204, 255, 0, 0.1)' }}>
+              <div style={{ flex: 1 }}>
+                <label className="block text-sm font-semibold text-secondary mb-1.5" style={{ textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em' }}>Method Name (e.g. Bank Transfer)</label>
+                <input type="text" className="input-field" value={newPaymentMethod.name} onChange={(e) => setNewPaymentMethod({...newPaymentMethod, name: e.target.value})} required placeholder="Enter method name" />
+              </div>
+              <div style={{ flex: 2 }}>
+                <label className="block text-sm font-semibold text-secondary mb-1.5" style={{ textTransform: 'uppercase', fontSize: '0.75rem', letterSpacing: '0.05em' }}>RIB / Account Details</label>
+                <input type="text" className="input-field" value={newPaymentMethod.rib} onChange={(e) => setNewPaymentMethod({...newPaymentMethod, rib: e.target.value})} required placeholder="0000 0000 0000 0000 0000" />
+              </div>
+              <button type="submit" className="btn btn-primary" style={{ height: '44px', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <Plus size={18} /> Add
+              </button>
+            </form>
+
+            <div>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'white', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Active Methods</h3>
+              {paymentMethods.length === 0 ? (
+                <div style={{ padding: '2rem', textAlign: 'center', color: '#a1a1aa', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '12px' }}>No payment methods added yet.</div>
+              ) : (
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {paymentMethods.map(method => (
+                    <div key={method.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '1rem 1.5rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                      <div>
+                        <div style={{ fontWeight: 600, color: 'white', marginBottom: '0.25rem' }}>{method.name}</div>
+                        <div style={{ color: 'var(--accent-primary)', fontSize: '0.9rem', letterSpacing: '1px', fontFamily: 'monospace' }}>{method.rib}</div>
+                      </div>
+                      <button onClick={() => handleDeletePaymentMethod(method.id)} style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '0.5rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
           </div>
         </div>
       )}

@@ -188,6 +188,28 @@ button {
 .text-secondary { color: var(--text-secondary); }
 .text-muted { color: var(--text-muted); }
 
+/* Text Truncation */
+.text-truncate {
+  display: inline-block;
+  max-width: 150px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+}
+
+@media (min-width: 768px) {
+  .text-truncate {
+    max-width: 200px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .text-truncate {
+    max-width: 250px;
+  }
+}
+
 /* Glassmorphism */
 .glass-panel {
   background: var(--bg-glass);
@@ -279,7 +301,7 @@ button {
   box-shadow: var(--shadow-md);
 }
 
-.card:hover {
+.card:hover, .card-hover:hover {
   transform: translateY(-3px);
   box-shadow: var(--shadow-lg);
   border-color: var(--border-hover);

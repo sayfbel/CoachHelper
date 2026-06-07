@@ -33,11 +33,7 @@ const Login = () => {
         if (data.user.role === 'admin') {
           navigate('/admin');
         } else {
-          if (data.order && (data.order.status === 'Pending' || data.order.status === 'Rejected')) {
-            navigate('/waiting', { state: { order: data.order } });
-          } else {
-            navigate('/user');
-          }
+          navigate('/user');
         }
       } else {
         setError(data.message || 'Login failed');
@@ -64,11 +60,7 @@ const Login = () => {
         if (data.user.role === 'admin') {
           navigate('/admin');
         } else {
-          if (data.order && (data.order.status === 'Pending' || data.order.status === 'Rejected')) {
-            navigate('/waiting', { state: { order: data.order } });
-          } else {
-            navigate('/user');
-          }
+          navigate('/user');
         }
       } else {
         setError(data.message || 'Google login failed');

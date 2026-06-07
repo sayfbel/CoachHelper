@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Tag, Check, X, Info } from 'lucide-react';
+import PremiumSelect from '../../components/PremiumSelect';
 
-const OfferFormModal = ({ isOpen, onClose, onSubmit }) => {
+const OfferFormModal = ({ isOpen, onClose, onSubmit, offerToEdit }) => {
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -15,14 +16,24 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit }) => {
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
-      // Reset form on open
-      setFormData({
-        name: '',
-        price: '',
-        period: 'month',
-        description: '',
-        is_popular: false
-      });
+      if (offerToEdit) {
+        setFormData({
+          name: offerToEdit.name || '',
+          price: offerToEdit.price || '',
+          period: offerToEdit.period || 'month',
+          description: offerToEdit.description || '',
+          is_popular: offerToEdit.is_popular || false
+        });
+      } else {
+        // Reset form on open
+        setFormData({
+          name: '',
+          price: '',
+          period: 'month',
+          description: '',
+          is_popular: false
+        });
+      }
     } else {
       document.body.style.overflow = 'unset';
     }
@@ -32,6 +43,12 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit }) => {
   }, [isOpen]);
 
   if (!isOpen) return null;
+
+  const periodOptions = [
+    { value: 'week', label: 'Weekly' },
+    { value: 'month', label: 'Monthly' },
+    { value: 'year', label: 'Yearly' }
+  ];
 
   const handleChange = (e) => {
     const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
@@ -67,7 +84,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit }) => {
       animation: 'fadeIn 0.2s ease-out'
     }}>
       <div style={{
-        backgroundColor: '#18181b',
+        backgroundColor: '#121212',
         borderRadius: '24px',
         padding: '2.5rem',
         maxWidth: '500px',
@@ -94,7 +111,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit }) => {
             <Tag size={20} color="var(--accent-primary)" />
           </div>
           <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'white', fontFamily: 'var(--font-title)' }}>
-            Create New Offer
+            {offerToEdit ? 'Edit Offer' : 'Create New Offer'}
           </h2>
         </div>
 
@@ -140,16 +157,12 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit }) => {
             {/* Period */}
             <div style={{ flex: 1 }}>
               <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.85rem', marginBottom: '0.5rem', fontWeight: 600 }}>Billing Period</label>
-              <select 
-                name="period" 
-                value={formData.period} 
-                onChange={handleChange}
-                style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: 'white', outline: 'none', appearance: 'none', cursor: 'pointer' }}
-              >
-                <option value="week" style={{ background: '#18181b' }}>Weekly</option>
-                <option value="month" style={{ background: '#18181b' }}>Monthly</option>
-                <option value="year" style={{ background: '#18181b' }}>Yearly</option>
-              </select>
+              <PremiumSelect 
+                options={periodOptions}
+                value={formData.period}
+                onChange={(val) => setFormData({ ...formData, period: val })}
+                placeholder="Select Period"
+              />
             </div>
           </div>
 

@@ -33,7 +33,7 @@ const ConfirmModal = ({ isOpen, title, description, onConfirm, onCancel }) => {
       animation: 'fadeIn 0.2s ease-out'
     }}>
       <div style={{
-        backgroundColor: '#18181b',
+        backgroundColor: '#121212',
         borderRadius: '24px',
         padding: '2.5rem',
         maxWidth: '450px',

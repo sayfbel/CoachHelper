@@ -16,6 +16,8 @@ import {
   Sun
 } from 'lucide-react';
 
+import Logo from '../../components/Logo';
+
 const AdminSidebar = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ const AdminSidebar = () => {
     <div style={{
       width: '260px',
       height: 'calc(100vh - 2rem)',
-      backgroundColor: '#18181b', // Very dark grey, almost black
+      backgroundColor: '#121212', // Very dark grey, almost black
       borderRadius: '24px',
       display: 'flex',
       flexDirection: 'column',
@@ -45,12 +47,10 @@ const AdminSidebar = () => {
       overflowY: 'auto'
     }}>
       {/* Logo Area */}
-      <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center' }}>
-        <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: '#3f3f46', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <div style={{ width: '20px', height: '20px', border: '2px solid white', borderRadius: '50%', position: 'relative' }}>
-            <div style={{ position: 'absolute', top: '50%', left: '-2px', right: '-2px', height: '2px', background: 'white', transform: 'translateY(-50%)' }} />
-            <div style={{ position: 'absolute', left: '50%', top: '-2px', bottom: '-2px', width: '2px', background: 'white', transform: 'translateX(-50%)' }} />
-          </div>
+      <div style={{ marginBottom: '2.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <Logo />
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <span style={{ color: 'white', fontWeight: 800, fontSize: '1.2rem', fontFamily: 'var(--font-title)', letterSpacing: '-0.02em', lineHeight: 1 }}>HOOPCOACH</span>
         </div>
       </div>
 

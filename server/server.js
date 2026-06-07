@@ -4,14 +4,29 @@ const cors = require('cors');
 const mysql = require('mysql2/promise');
 const nodemailer = require('nodemailer');
 const { OAuth2Client } = require('google-auth-library');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Setup Multer for receipt uploads
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    }
+});
+const upload = multer({ storage });
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Create connection pool for MySQL
 const pool = mysql.createPool({
@@ -49,7 +64,7 @@ app.post('/api/login', async (req, res) => {
 
         if (rows.length > 0) {
             const user = rows[0];
-            if (!user.is_email_verified) {
+            if (!user.is_email_verified && user.role !== 'admin') {
                 return res.status(401).json({ message: 'Please verify your email address before logging in.' });
             }
 
@@ -119,7 +134,7 @@ app.post('/api/auth/google', async (req, res) => {
 
 // Register endpoint
 app.post('/api/register', async (req, res) => {
-    const { name, email, password, phone, clubName, plan, paymentMethod } = req.body;
+    const { name, email, password, phone, clubName, city, plan, paymentMethod } = req.body;
     
     if (!email || !password || !name) {
         return res.status(400).json({ message: 'Name, email, and password are required' });
@@ -129,18 +144,19 @@ app.post('/api/register', async (req, res) => {
         const token = Math.floor(100000 + Math.random() * 900000).toString();
 
         const [result] = await pool.execute(
-            'INSERT INTO users (name, email, password, phone, club_name, plan, payment_method, role, is_email_verified, verification_token) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 0, ?)',
-            [name, email, password, phone, clubName, plan, paymentMethod, 'user', token]
+            'INSERT INTO users (name, email, password, phone, club_name, city, plan, payment_method, role, is_email_verified, verification_token) VALUES (?, ?, ?, ?, ?, ?, NULL, NULL, ?, 0, ?)',
+            [name, email, password, phone, clubName, city, 'user', token]
         );
 
         let amount = 0;
-        if (plan === 'weekly') amount = 9.00;
-        else if (plan === 'monthly') amount = 29.00;
-        else if (plan === 'yearly') amount = 290.00;
+        const [offerRows] = await pool.execute('SELECT price FROM offers WHERE name = ?', [plan]);
+        if (offerRows.length > 0) {
+            amount = offerRows[0].price;
+        }
 
         await pool.execute(
-            'INSERT INTO orders (user_id, customer_email, plan, amount, status) VALUES (?, ?, ?, ?, ?)',
-            [result.insertId, email, plan, amount, 'Pending']
+            'INSERT INTO orders (user_id, customer_email, plan, payment_method, amount, status) VALUES (?, ?, ?, ?, ?, ?)',
+            [result.insertId, email, plan, paymentMethod, amount, 'Pending']
         );
 
         // Send validation email
@@ -175,19 +191,38 @@ app.post('/api/register', async (req, res) => {
 // Verify email endpoint
 app.post('/api/verify-email', async (req, res) => {
     const { email, token } = req.body;
-    if (!email || !token) return res.status(400).json({ message: 'Email and Token are required' });
-
     try {
         const [rows] = await pool.execute('SELECT id FROM users WHERE email = ? AND verification_token = ?', [email, token]);
-        if (rows.length === 0) {
-            return res.status(400).json({ message: 'Invalid or expired verification code' });
+        if (rows.length > 0) {
+            await pool.execute('UPDATE users SET is_email_verified = 1, verification_token = NULL WHERE email = ?', [email]);
+            
+            // Also get the pending order ID to pass back to the client for uploading receipt
+            const [orderRows] = await pool.execute('SELECT id FROM orders WHERE customer_email = ? ORDER BY created_at DESC LIMIT 1', [email]);
+            
+            res.json({ message: 'Email verified successfully', orderId: orderRows.length > 0 ? orderRows[0].id : null });
+        } else {
+            res.status(400).json({ message: 'Invalid token' });
         }
+    } catch (err) {
+        res.status(500).json({ message: 'Internal server error' });
+    }
+});
 
-        await pool.execute('UPDATE users SET is_email_verified = 1, verification_token = NULL WHERE id = ?', [rows[0].id]);
-        res.json({ message: 'Email verified successfully! You can now log in.' });
+// Upload Receipt endpoint
+app.post('/api/upload-receipt', upload.single('receipt'), async (req, res) => {
+    const { orderId } = req.body;
+    if (!req.file || !orderId) {
+        return res.status(400).json({ message: 'Receipt image and orderId are required' });
+    }
+
+    const receiptUrl = `/uploads/${req.file.filename}`;
+
+    try {
+        await pool.execute('UPDATE orders SET receipt_image = ? WHERE id = ?', [receiptUrl, orderId]);
+        res.json({ message: 'Receipt uploaded successfully', receiptUrl });
     } catch (err) {
         console.error(err);
-        res.status(500).json({ message: 'Internal server error' });
+        res.status(500).json({ message: 'Failed to upload receipt' });
     }
 });
 
@@ -227,6 +262,40 @@ app.post('/api/offers', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error while creating offer' });
+    }
+});
+
+// Update an existing offer
+app.put('/api/offers/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, price, period, description, is_popular } = req.body;
+    try {
+        const [result] = await pool.execute(
+            'UPDATE offers SET name = ?, price = ?, period = ?, description = ?, is_popular = ? WHERE id = ?',
+            [name, price, period, description || '', is_popular ? 1 : 0, id]
+        );
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Offer not found' });
+        }
+        res.json({ message: 'Offer updated successfully', offer: { id: parseInt(id), name, price, period, description, is_popular } });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error while updating offer' });
+    }
+});
+
+// Delete an offer
+app.delete('/api/offers/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [result] = await pool.execute('DELETE FROM offers WHERE id = ?', [id]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'Offer not found' });
+        }
+        res.json({ message: 'Offer deleted successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error while deleting offer' });
     }
 });
 
@@ -291,10 +360,251 @@ app.put('/api/orders/:id/status', async (req, res) => {
         } else {
             await pool.execute('UPDATE orders SET status = ? WHERE id = ?', [status, id]);
         }
+
+        const [orderRows] = await pool.execute('SELECT user_id, plan, payment_method FROM orders WHERE id = ?', [id]);
+        if (orderRows.length > 0) {
+            const order = orderRows[0];
+            
+            if (status === 'Confirmed') {
+                const [offerRows] = await pool.execute('SELECT period FROM offers WHERE name = ?', [order.plan]);
+                let period = offerRows.length > 0 ? offerRows[0].period.toLowerCase() : '';
+                let daysToAdd = 0;
+                if (period === 'weekly') daysToAdd = 7;
+                else if (period === 'monthly') daysToAdd = 30;
+                else if (period === 'yearly') daysToAdd = 365;
+
+                if (daysToAdd > 0) {
+                    const startDate = new Date();
+                    const planEndDate = new Date(startDate);
+                    planEndDate.setDate(planEndDate.getDate() + daysToAdd);
+                    
+                    const formattedStart = startDate.toISOString().slice(0, 19).replace('T', ' ');
+                    const formattedEnd = planEndDate.toISOString().slice(0, 19).replace('T', ' ');
+
+                    await pool.execute(
+                        'UPDATE users SET plan = ?, payment_method = ?, plan_start_date = ?, plan_end_date = ? WHERE id = ?',
+                        [order.plan, order.payment_method, formattedStart, formattedEnd, order.user_id]
+                    );
+                }
+            } else if (status === 'Pending') {
+                await pool.execute(
+                    'UPDATE users SET plan_end_date = NULL WHERE id = ?',
+                    [order.user_id]
+                );
+            } else if (status === 'Rejected' && reason) {
+                // Send email to user
+                const mailOptions = {
+                    from: process.env.SMTP_USER,
+                    to: order.customer_email,
+                    subject: 'Update on Your HoopCoach Registration',
+                    html: `
+                        <h1>Registration Update</h1>
+                        <p>We are sorry, but your payment could not be verified.</p>
+                        <p><strong>Reason:</strong> ${reason}</p>
+                        <p>Your pending account has been removed. Please try registering again with a valid payment receipt.</p>
+                    `
+                };
+                transporter.sendMail(mailOptions, (error) => {
+                    if (error) console.error('Error sending rejection email:', error);
+                });
+
+                // Delete the user (this will also cascade or we should manually delete orders if no cascade)
+                await pool.execute('DELETE FROM orders WHERE user_id = ?', [order.user_id]);
+                await pool.execute('DELETE FROM users WHERE id = ?', [order.user_id]);
+            }
+        }
         res.json({ message: 'Order status updated successfully' });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error while updating order status' });
+    }
+});
+
+// Get user's latest order status
+app.get('/api/users/:id/order-status', async (req, res) => {
+    try {
+        const [rows] = await pool.execute(
+            'SELECT status, plan, rejection_reason FROM orders WHERE user_id = ? ORDER BY created_at DESC LIMIT 1',
+            [req.params.id]
+        );
+        if (rows.length > 0) {
+            res.json(rows[0]);
+        } else {
+            res.status(404).json({ message: 'No orders found' });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error while fetching order status' });
+    }
+});
+
+// Get all users
+app.get('/api/users', async (req, res) => {
+    try {
+        const [rows] = await pool.execute('SELECT id, name, email, phone, club_name, plan, payment_method, role, is_email_verified, plan_start_date, plan_end_date FROM users');
+        res.json(rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error while fetching users' });
+    }
+});
+
+// Get user profile including plan info
+app.get('/api/users/:id/profile', async (req, res) => {
+    try {
+        const [rows] = await pool.execute(
+            'SELECT id, name, email, phone, club_name, plan, payment_method, role, is_email_verified, plan_start_date, plan_end_date FROM users WHERE id = ?',
+            [req.params.id]
+        );
+        if (rows.length > 0) {
+            res.json(rows[0]);
+        } else {
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error while fetching user profile' });
+    }
+});
+
+// Delete user
+app.delete('/api/users/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await pool.execute('DELETE FROM orders WHERE user_id = ?', [id]);
+        const [result] = await pool.execute('DELETE FROM users WHERE id = ?', [id]);
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json({ message: 'User deleted successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error while deleting user' });
+    }
+});
+
+// End offer
+app.put('/api/users/:id/end-offer', async (req, res) => {
+    const { id } = req.params;
+    try {
+        // Set plan_end_date to current time
+        const formattedDate = new Date().toISOString().slice(0, 19).replace('T', ' ');
+        const [result] = await pool.execute(
+            'UPDATE users SET plan_end_date = ? WHERE id = ?',
+            [formattedDate, id]
+        );
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json({ message: 'Offer ended successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error while ending offer' });
+    }
+});
+
+// Restart offer
+app.put('/api/users/:id/restart-offer', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const [userRows] = await pool.execute('SELECT plan FROM users WHERE id = ?', [id]);
+        if (userRows.length === 0) return res.status(404).json({ message: 'User not found' });
+        
+        let plan = userRows[0].plan;
+        if (!plan) return res.status(400).json({ message: 'User has no active plan to restart' });
+
+        let daysToAdd = 30; // Default monthly
+        if (plan.toLowerCase() === 'weekly') daysToAdd = 7;
+        else if (plan.toLowerCase() === 'yearly') daysToAdd = 365;
+
+        const startDate = new Date();
+        const endDate = new Date(startDate);
+        endDate.setDate(endDate.getDate() + daysToAdd);
+
+        const formattedStart = startDate.toISOString().slice(0, 19).replace('T', ' ');
+        const formattedEnd = endDate.toISOString().slice(0, 19).replace('T', ' ');
+
+        await pool.execute(
+            'UPDATE users SET plan_start_date = ?, plan_end_date = ? WHERE id = ?',
+            [formattedStart, formattedEnd, id]
+        );
+        res.json({ message: 'Offer restarted successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error while restarting offer' });
+    }
+});
+
+// Add offer to user
+app.put('/api/users/:id/add-offer', async (req, res) => {
+    const { id } = req.params;
+    const { plan_name, period } = req.body;
+    
+    if (!plan_name || !period) {
+        return res.status(400).json({ message: 'Plan name and period are required' });
+    }
+
+    try {
+        let daysToAdd = 30;
+        if (period.toLowerCase() === 'weekly') daysToAdd = 7;
+        else if (period.toLowerCase() === 'yearly') daysToAdd = 365;
+
+        const startDate = new Date();
+        const endDate = new Date(startDate);
+        endDate.setDate(endDate.getDate() + daysToAdd);
+
+        const formattedStart = startDate.toISOString().slice(0, 19).replace('T', ' ');
+        const formattedEnd = endDate.toISOString().slice(0, 19).replace('T', ' ');
+
+        const [result] = await pool.execute(
+            'UPDATE users SET plan = ?, plan_start_date = ?, plan_end_date = ? WHERE id = ?',
+            [plan_name, formattedStart, formattedEnd, id]
+        );
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.json({ message: 'Offer added successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error while adding offer' });
+    }
+});
+// Payment Methods API
+app.get('/api/payment-methods', async (req, res) => {
+    try {
+        const [rows] = await pool.execute('SELECT * FROM payment_methods ORDER BY created_at DESC');
+        res.json(rows);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error while fetching payment methods' });
+    }
+});
+
+app.post('/api/payment-methods', async (req, res) => {
+    const { name, rib } = req.body;
+    if (!name || !rib) {
+        return res.status(400).json({ message: 'Name and RIB are required' });
+    }
+    try {
+        const [result] = await pool.execute(
+            'INSERT INTO payment_methods (name, rib) VALUES (?, ?)',
+            [name, rib]
+        );
+        res.status(201).json({ id: result.insertId, name, rib });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error while creating payment method' });
+    }
+});
+
+app.delete('/api/payment-methods/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        await pool.execute('DELETE FROM payment_methods WHERE id = ?', [id]);
+        res.json({ message: 'Payment method deleted successfully' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error while deleting payment method' });
     }
 });
 

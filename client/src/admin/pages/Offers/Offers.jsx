@@ -9,6 +9,7 @@ const Offers = () => {
   const [confirmModalConfig, setConfirmModalConfig] = useState({ title: '', description: '', onConfirm: () => { } });
 
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [offerToEdit, setOfferToEdit] = useState(null);
   const [notification, setNotification] = useState({ isVisible: false, message: '', type: 'success' });
 
   const [offers, setOffers] = useState([]);
@@ -34,53 +35,79 @@ const Offers = () => {
   };
 
   const handleCreateOfferClick = () => {
+    setOfferToEdit(null);
     setIsFormModalOpen(true);
   };
 
-  const handleAddOffer = async (newOffer) => {
-    try {
-      const response = await fetch('http://localhost:3000/api/offers', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newOffer)
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        // Append the new offer returned by the server (which includes the DB ID)
-        setOffers([...offers, result.offer]);
-        setIsFormModalOpen(false);
-        showNotification('Offer created and saved to database successfully!');
-      } else {
-        showNotification('Failed to save offer to database', 'error');
+  const handleSaveOffer = async (offerData) => {
+    if (offerToEdit) {
+      try {
+        const response = await fetch(`http://localhost:3000/api/offers/${offerToEdit.id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(offerData)
+        });
+        if (response.ok) {
+          const result = await response.json();
+          setOffers(offers.map(o => o.id === offerToEdit.id ? result.offer : o));
+          setIsFormModalOpen(false);
+          setOfferToEdit(null);
+          showNotification('Offer updated successfully!');
+        } else {
+          showNotification('Failed to update offer', 'error');
+        }
+      } catch (error) {
+        console.error('Error updating offer:', error);
+        showNotification('Error updating offer', 'error');
       }
-    } catch (error) {
-      console.error('Error saving offer:', error);
-      showNotification('Error saving offer to database', 'error');
+    } else {
+      try {
+        const response = await fetch('http://localhost:3000/api/offers', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(offerData)
+        });
+
+        if (response.ok) {
+          const result = await response.json();
+          setOffers([...offers, result.offer]);
+          setIsFormModalOpen(false);
+          showNotification('Offer created successfully!');
+        } else {
+          showNotification('Failed to save offer', 'error');
+        }
+      } catch (error) {
+        console.error('Error saving offer:', error);
+        showNotification('Error saving offer', 'error');
+      }
     }
   };
 
-  const handleEditOffer = (offerName) => {
-    setConfirmModalConfig({
-      title: 'Edit Subscription Plan',
-      description: `Do you want to modify the settings for the ${offerName}? Active subscribers will not be affected until their next billing cycle.`,
-      onConfirm: () => {
-        // Simulate edit
-        setIsConfirmModalOpen(false);
-      }
-    });
-    setIsConfirmModalOpen(true);
+  const handleEditOffer = (offer) => {
+    setOfferToEdit(offer);
+    setIsFormModalOpen(true);
   };
 
-  const handleDisableOffer = (offerName) => {
+  const handleDisableOffer = (offer) => {
     setConfirmModalConfig({
-      title: 'Disable Offer',
-      description: `Are you absolutely sure you want to disable the ${offerName}? New users will no longer be able to select this tier at checkout.`,
-      onConfirm: () => {
-        // Simulate disable
+      title: 'Delete Offer',
+      description: `Are you absolutely sure you want to delete the ${offer.name}? New users will no longer be able to select this tier at checkout.`,
+      onConfirm: async () => {
         setIsConfirmModalOpen(false);
+        try {
+          const response = await fetch(`http://localhost:3000/api/offers/${offer.id}`, {
+            method: 'DELETE'
+          });
+          if (response.ok) {
+            setOffers(offers.filter(o => o.id !== offer.id));
+            showNotification('Offer deleted successfully!');
+          } else {
+            showNotification('Failed to delete offer', 'error');
+          }
+        } catch (error) {
+          console.error('Error deleting offer:', error);
+          showNotification('Error deleting offer', 'error');
+        }
       }
     });
     setIsConfirmModalOpen(true);
@@ -102,14 +129,12 @@ const Offers = () => {
         </button>
       </div>
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem', width: '100%' }}>
         {offers.map((offer) => (
           <div
             key={offer.id}
             className="card text-center relative"
             style={{
-              flex: 1,
-              minWidth: '280px',
               borderTop: `4px solid ${offer.is_popular ? 'var(--accent-primary)' : offer.id === 1 ? 'var(--border-color)' : 'var(--success)'}`,
               transform: offer.is_popular ? 'scale(1.02)' : 'none',
               zIndex: offer.is_popular ? 5 : 1,
@@ -129,11 +154,11 @@ const Offers = () => {
               <p style={{ fontSize: '3rem', fontWeight: 900, margin: '1rem 0', fontFamily: 'var(--font-title)', color: 'white' }}>
                 ${offer.price}<span style={{ fontSize: '1rem', color: 'var(--text-secondary)', fontWeight: 'normal' }}>/{offer.period}</span>
               </p>
-              <p className="text-secondary text-sm mb-8">{offer.description}</p>
+              <p className="text-secondary text-sm mb-8 text-truncate" title={offer.description} style={{ maxWidth: '100%' }}>{offer.description}</p>
             </div>
             <div style={{ display: 'flex', gap: '1rem' }}>
-              <button onClick={() => handleEditOffer(offer.name)} className={offer.is_popular ? "btn btn-primary" : "btn btn-secondary"} style={{ flex: 1, padding: '0.75rem 1rem' }}>Edit</button>
-              <button onClick={() => handleDisableOffer(offer.name)} style={{ background: 'transparent', border: '1px solid rgba(239,68,68,0.3)', color: 'var(--danger)', borderRadius: 'var(--border-radius)', padding: '0.75rem 1rem', cursor: 'pointer', transition: 'var(--transition)' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)' }} onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}>Disable</button>
+              <button onClick={() => handleEditOffer(offer)} className={offer.is_popular ? "btn btn-primary" : "btn btn-secondary"} style={{ flex: 1, padding: '0.75rem 1rem' }}>Edit</button>
+              <button onClick={() => handleDisableOffer(offer)} style={{ background: 'transparent', border: '1px solid rgba(239,68,68,0.3)', color: 'var(--danger)', borderRadius: 'var(--border-radius)', padding: '0.75rem 1rem', cursor: 'pointer', transition: 'var(--transition)' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)' }} onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}>Delete</button>
             </div>
           </div>
         ))}
@@ -149,8 +174,9 @@ const Offers = () => {
 
       <OfferFormModal 
         isOpen={isFormModalOpen}
-        onClose={() => setIsFormModalOpen(false)}
-        onSubmit={handleAddOffer}
+        onClose={() => { setIsFormModalOpen(false); setOfferToEdit(null); }}
+        onSubmit={handleSaveOffer}
+        offerToEdit={offerToEdit}
       />
 
       <Notification 

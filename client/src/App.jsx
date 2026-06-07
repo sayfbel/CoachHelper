@@ -13,26 +13,24 @@ import User from './user/pages/User/User';
 import Admin from './admin/pages/Admin/Admin';
 import Checkout from './welcome/pages/Checkout/Checkout';
 import Verify from './welcome/pages/Verify/Verify';
-import Waiting from './user/pages/Waiting/Waiting';
 
 import { useLocation } from 'react-router-dom';
 
 const AppLayout = () => {
   const location = useLocation();
-  const isAdmin = location.pathname.startsWith('/admin');
+  const isAdminOrUser = location.pathname.startsWith('/admin') || location.pathname.startsWith('/user');
 
   return (
-    <div className={isAdmin ? "" : "app-frame"}>
-      {!isAdmin && <Navbar />}
-      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: isAdmin ? '100vh' : 'auto' }}>
+    <div className={isAdminOrUser ? "" : "app-frame"}>
+      {!isAdminOrUser && <Navbar />}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', height: isAdminOrUser ? '100vh' : 'auto' }}>
         <Routes>
           <Route path="/" element={<Welcome />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/user" element={<User />} />
+          <Route path="/user/*" element={<User />} />
           <Route path="/admin/*" element={<Admin />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/verify" element={<Verify />} />
-          <Route path="/waiting" element={<Waiting />} />
         </Routes>
       </div>
     </div>

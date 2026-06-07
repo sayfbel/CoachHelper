@@ -29,7 +29,7 @@ const Notification = ({ isVisible, message, type = 'success', onClose, autoClose
       display: 'flex',
       alignItems: 'center',
       gap: '1rem',
-      background: '#18181b', // dark background
+      background: '#121212', // dark background
       border: `1px solid ${borderColor}`,
       borderRadius: '12px',
       padding: '1rem 1.25rem',
