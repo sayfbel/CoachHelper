@@ -84,7 +84,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, offerToEdit }) => {
       animation: 'fadeIn 0.2s ease-out'
     }}>
       <div style={{
-        backgroundColor: '#121212',
+        backgroundColor: 'var(--bg-secondary)',
         borderRadius: '24px',
         padding: '2.5rem',
         maxWidth: '500px',
@@ -110,7 +110,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, offerToEdit }) => {
           }}>
             <Tag size={20} color="var(--accent-primary)" />
           </div>
-          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'white', fontFamily: 'var(--font-title)' }}>
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, color: 'var(--text-primary)', fontFamily: 'var(--font-title)' }}>
             {offerToEdit ? 'Edit Offer' : 'Create New Offer'}
           </h2>
         </div>
@@ -127,9 +127,9 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, offerToEdit }) => {
               onChange={handleChange} 
               placeholder="e.g. Pro Plan"
               required
-              style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: 'white', outline: 'none', transition: '0.2s' }} 
+              style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', borderRadius: '12px', color: 'var(--text-primary)', outline: 'none', transition: '0.2s' }} 
               onFocus={(e) => e.target.style.borderColor = 'var(--accent-primary)'}
-              onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
+              onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
             />
           </div>
 
@@ -147,9 +147,9 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, offerToEdit }) => {
                   placeholder="29.00"
                   step="0.01"
                   required
-                  style={{ width: '100%', padding: '0.75rem 1rem 0.75rem 2rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: 'white', outline: 'none', transition: '0.2s' }} 
+                  style={{ width: '100%', padding: '0.75rem 1rem 0.75rem 2rem', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', borderRadius: '12px', color: 'var(--text-primary)', outline: 'none', transition: '0.2s' }} 
                   onFocus={(e) => e.target.style.borderColor = 'var(--accent-primary)'}
-                  onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
+                  onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
                 />
               </div>
             </div>
@@ -175,9 +175,9 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, offerToEdit }) => {
               onChange={handleChange} 
               placeholder="Describe the benefits of this plan..."
               rows="3"
-              style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '12px', color: 'white', outline: 'none', resize: 'none', transition: '0.2s' }}
+              style={{ width: '100%', padding: '0.75rem 1rem', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--border-color)', borderRadius: '12px', color: 'var(--text-primary)', outline: 'none', resize: 'none', transition: '0.2s' }}
               onFocus={(e) => e.target.style.borderColor = 'var(--accent-primary)'}
-              onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
+              onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
             />
           </div>
 
@@ -191,7 +191,7 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, offerToEdit }) => {
               onChange={handleChange}
               style={{ width: '18px', height: '18px', cursor: 'pointer', accentColor: 'var(--accent-primary)' }}
             />
-            <label htmlFor="is_popular" style={{ color: 'white', fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <label htmlFor="is_popular" style={{ color: 'var(--text-primary)', fontSize: '0.9rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               Mark as "Most Popular"
               <Info size={14} color="var(--text-secondary)" />
             </label>
@@ -201,23 +201,17 @@ const OfferFormModal = ({ isOpen, onClose, onSubmit, offerToEdit }) => {
           <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
             <button 
               type="button"
+              className="btn btn-secondary"
               onClick={onClose}
-              style={{
-                flex: 1, padding: '0.85rem', borderRadius: '30px', border: '1px solid #3f3f46', background: 'transparent', color: 'white', fontWeight: 600, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', transition: '0.2s'
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.background = '#27272a' }}
-              onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+              style={{ flex: 1 }}
             >
               <X size={18} /> Cancel
             </button>
             
             <button 
               type="submit"
-              style={{
-                flex: 1, padding: '0.85rem', borderRadius: '30px', border: 'none', background: 'var(--accent-primary)', color: 'black', fontWeight: 800, cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem', transition: '0.2s'
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)' }}
-              onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)' }}
+              className="btn btn-primary"
+              style={{ flex: 1 }}
             >
               <Check size={18} /> Save Offer
             </button>

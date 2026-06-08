@@ -62,12 +62,12 @@ const Messages = () => {
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+      <div className="responsive-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(204, 255, 0, 0.08)', border: '1px solid rgba(204, 255, 0, 0.2)', padding: '0.4rem 1rem', borderRadius: '30px', color: 'var(--accent-primary)', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>
             <span>Contact Form Inquiries</span>
           </div>
-          <h1 style={{ fontSize: '2.5rem', lineHeight: '1.05', fontFamily: 'var(--font-title)', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '-0.03em', color: 'white' }}>
+          <h1 style={{ fontSize: '2.5rem', lineHeight: '1.05', fontFamily: 'var(--font-title)', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
             Client <span style={{ color: 'var(--accent-primary)' }}>Messages</span>
           </h1>
         </div>
@@ -77,21 +77,21 @@ const Messages = () => {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
         
         {/* Total Messages (Not Clickable) */}
-        <div style={{ backgroundColor: '#121212', borderRadius: '24px', padding: '1.75rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: '1rem', transition: 'var(--transition)' }} className="card-hover">
+        <div style={{ backgroundColor: 'var(--bg-secondary)', borderRadius: '24px', padding: '1.75rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: '1rem', transition: 'var(--transition)' }} className="card-hover">
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: '#a1a1aa', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Total Messages</span>
+            <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Total Messages</span>
             <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '0.6rem', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.1)' }}>
               <MessageSquare size={20} color="white" />
             </div>
           </div>
-          <div style={{ fontSize: '3.5rem', fontWeight: 900, fontFamily: 'var(--font-title)', color: 'white', lineHeight: 1 }}>{totalMessages}</div>
+          <div style={{ fontSize: '3.5rem', fontWeight: 900, fontFamily: 'var(--font-title)', color: 'var(--text-primary)', lineHeight: 1 }}>{totalMessages}</div>
         </div>
 
         {/* Total Replied (Clickable Filter) */}
         <div 
           onClick={() => toggleFilter('Replied')}
           style={{ 
-            backgroundColor: activeFilter === 'Replied' ? 'rgba(34, 197, 94, 0.05)' : '#121212', 
+            backgroundColor: activeFilter === 'Replied' ? 'rgba(34, 197, 94, 0.05)' : 'var(--bg-secondary)', 
             borderRadius: '24px', padding: '1.75rem', 
             border: activeFilter === 'Replied' ? '1px solid var(--success)' : '1px solid rgba(255,255,255,0.05)', 
             display: 'flex', flexDirection: 'column', gap: '1rem', 
@@ -101,12 +101,12 @@ const Messages = () => {
           className="card-hover"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: activeFilter === 'Replied' ? 'var(--success)' : '#a1a1aa', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Total Replied</span>
+            <span style={{ color: activeFilter === 'Replied' ? 'var(--success)' : 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Total Replied</span>
             <div style={{ background: activeFilter === 'Replied' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(255, 255, 255, 0.05)', padding: '0.6rem', borderRadius: '14px', border: activeFilter === 'Replied' ? '1px solid rgba(34, 197, 94, 0.2)' : '1px solid rgba(255,255,255,0.1)' }}>
-              <CheckCircle size={20} color={activeFilter === 'Replied' ? 'var(--success)' : 'white'} />
+              <CheckCircle size={20} color={activeFilter === 'Replied' ? 'var(--success)' : 'var(--text-primary)'} />
             </div>
           </div>
-          <div style={{ fontSize: '3.5rem', fontWeight: 900, fontFamily: 'var(--font-title)', color: activeFilter === 'Replied' ? 'var(--success)' : 'white', lineHeight: 1 }}>{totalReplied}</div>
+          <div style={{ fontSize: '3.5rem', fontWeight: 900, fontFamily: 'var(--font-title)', color: activeFilter === 'Replied' ? 'var(--success)' : 'var(--text-primary)', lineHeight: 1 }}>{totalReplied}</div>
           {activeFilter === 'Replied' && <span style={{ fontSize: '0.75rem', color: 'var(--success)', fontWeight: 'bold' }}>• Filter Active</span>}
         </div>
 
@@ -114,7 +114,7 @@ const Messages = () => {
         <div 
           onClick={() => toggleFilter('NotReplied')}
           style={{ 
-            backgroundColor: activeFilter === 'NotReplied' ? 'rgba(239, 68, 68, 0.05)' : '#121212', 
+            backgroundColor: activeFilter === 'NotReplied' ? 'rgba(239, 68, 68, 0.05)' : 'var(--bg-secondary)', 
             borderRadius: '24px', padding: '1.75rem', 
             border: activeFilter === 'NotReplied' ? '1px solid var(--danger)' : '1px solid rgba(255,255,255,0.05)', 
             display: 'flex', flexDirection: 'column', gap: '1rem', 
@@ -124,33 +124,33 @@ const Messages = () => {
           className="card-hover"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ color: activeFilter === 'NotReplied' ? 'var(--danger)' : '#a1a1aa', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Not Replied Yet</span>
+            <span style={{ color: activeFilter === 'NotReplied' ? 'var(--danger)' : 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Not Replied Yet</span>
             <div style={{ background: activeFilter === 'NotReplied' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(255, 255, 255, 0.05)', padding: '0.6rem', borderRadius: '14px', border: activeFilter === 'NotReplied' ? '1px solid rgba(239, 68, 68, 0.2)' : '1px solid rgba(255,255,255,0.1)' }}>
-              <Clock size={20} color={activeFilter === 'NotReplied' ? 'var(--danger)' : 'white'} />
+              <Clock size={20} color={activeFilter === 'NotReplied' ? 'var(--danger)' : 'var(--text-primary)'} />
             </div>
           </div>
-          <div style={{ fontSize: '3.5rem', fontWeight: 900, fontFamily: 'var(--font-title)', color: activeFilter === 'NotReplied' ? 'var(--danger)' : 'white', lineHeight: 1 }}>{totalNotReplied}</div>
+          <div style={{ fontSize: '3.5rem', fontWeight: 900, fontFamily: 'var(--font-title)', color: activeFilter === 'NotReplied' ? 'var(--danger)' : 'var(--text-primary)', lineHeight: 1 }}>{totalNotReplied}</div>
           {activeFilter === 'NotReplied' && <span style={{ fontSize: '0.75rem', color: 'var(--danger)', fontWeight: 'bold' }}>• Filter Active</span>}
         </div>
       </div>
 
       {/* Messages List Area */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginTop: '1rem' }}>
-        <h2 style={{ fontSize: '1.2rem', fontWeight: 600, color: 'white', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <ArrowLeftRight size={18} color="var(--accent-primary)" /> Inbox Stream {activeFilter !== 'All' && <span style={{ fontSize: '0.8rem', color: '#a1a1aa', background: 'rgba(255,255,255,0.05)', padding: '4px 10px', borderRadius: '20px' }}>Filtered by: {activeFilter}</span>}
+        <h2 style={{ fontSize: '1.2rem', fontWeight: 600, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <ArrowLeftRight size={18} color="var(--accent-primary)" /> Inbox Stream {activeFilter !== 'All' && <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', background: 'var(--border-color)', padding: '4px 10px', borderRadius: '20px' }}>Filtered by: {activeFilter}</span>}
         </h2>
         
         {isLoading ? (
-          <div style={{ textAlign: 'center', padding: '3rem', color: '#a1a1aa' }}>Loading messages...</div>
+          <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-secondary)' }}>Loading messages...</div>
         ) : filteredMessages.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '3rem', background: '#121212', borderRadius: '24px', border: '1px dashed rgba(255,255,255,0.1)', color: '#a1a1aa' }}>
+          <div style={{ textAlign: 'center', padding: '3rem', background: 'var(--bg-secondary)', borderRadius: '24px', border: '1px dashed rgba(255,255,255,0.1)', color: 'var(--text-secondary)' }}>
             No messages found {activeFilter !== 'All' && 'for this filter'}.
           </div>
         ) : filteredMessages.map((inquiry, idx) => {
           const isReplied = inquiry.status === 'Resolved' || inquiry.is_resolved === 1;
           return (
             <div key={inquiry.id || idx} style={{ 
-              backgroundColor: '#121212', 
+              backgroundColor: 'var(--bg-secondary)', 
               borderRadius: '24px', 
               padding: '2rem', 
               display: 'flex', 
@@ -165,16 +165,16 @@ const Messages = () => {
               {/* Message Header */}
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                  <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: isReplied ? 'rgba(34, 197, 94, 0.1)' : 'rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isReplied ? 'var(--success)' : 'white' }}>
+                  <div style={{ width: '48px', height: '48px', borderRadius: '50%', background: isReplied ? 'rgba(34, 197, 94, 0.1)' : 'var(--border-color)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isReplied ? 'var(--success)' : 'var(--text-primary)' }}>
                     <Mail size={20} />
                   </div>
                   <div>
-                    <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'white', marginBottom: '0.2rem' }}>{inquiry.name}</h3>
-                    <p className="text-truncate" title={inquiry.email} style={{ color: '#a1a1aa', fontSize: '0.85rem' }}>{inquiry.email}</p>
+                    <h3 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '0.2rem' }}>{inquiry.name}</h3>
+                    <p className="text-truncate" title={inquiry.email} style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{inquiry.email}</p>
                   </div>
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
-                  <span style={{ color: '#71717a', fontSize: '0.8rem', fontWeight: 500 }}>{new Date(inquiry.created_at).toLocaleString()}</span>
+                  <span style={{ color: 'var(--border-color)', fontSize: '0.8rem', fontWeight: 500 }}>{new Date(inquiry.created_at).toLocaleString()}</span>
                   {isReplied ? (
                     <span style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', fontWeight: 'bold', color: 'var(--success)', background: 'rgba(34, 197, 94, 0.1)', padding: '4px 10px', borderRadius: '20px' }}><CheckCircle size={12}/> REPLIED</span>
                   ) : (
@@ -185,15 +185,15 @@ const Messages = () => {
 
               {/* Message Body (Modern Format) */}
               <div style={{ background: 'rgba(255,255,255,0.02)', borderLeft: '2px solid rgba(255,255,255,0.1)', padding: '1.25rem 1.5rem', borderRadius: '0 12px 12px 0' }}>
-                <div style={{ color: 'white', fontWeight: 600, fontSize: '1rem', marginBottom: '0.75rem' }}>
+                <div style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '1rem', marginBottom: '0.75rem' }}>
                   {inquiry.subject}
                 </div>
-                <p style={{ color: '#d4d4d8', lineHeight: 1.7, fontSize: '0.95rem' }}>{inquiry.message}</p>
+                <p style={{ color: 'var(--text-secondary)', lineHeight: 1.7, fontSize: '0.95rem' }}>{inquiry.message}</p>
               </div>
 
               {/* Action Buttons */}
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
-                <button style={{ background: 'transparent', border: '1px solid #3f3f46', color: 'white', borderRadius: '30px', padding: '0.6rem 1.5rem', fontWeight: 'bold', fontSize: '0.85rem', cursor: 'pointer', transition: 'var(--transition)' }} className="btn-secondary">
+                <button style={{ background: 'transparent', border: '1px solid var(--border-hover)', color: 'var(--text-primary)', borderRadius: '30px', padding: '0.6rem 1.5rem', fontWeight: 'bold', fontSize: '0.85rem', cursor: 'pointer', transition: 'var(--transition)' }} className="btn-secondary">
                   Reply via Email
                 </button>
                 {!isReplied && (

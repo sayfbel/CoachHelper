@@ -30,7 +30,7 @@ const PremiumSelect = ({ options, value, onChange, placeholder = 'Select an opti
           alignItems: 'center',
           justifyContent: 'space-between',
           cursor: 'pointer',
-          background: isOpen ? '#161616' : '#121212',
+          background: isOpen ? 'var(--bg-primary)' : 'var(--bg-secondary)',
           borderColor: isOpen ? 'var(--accent-primary)' : 'var(--border-color)',
           boxShadow: isOpen ? '0 0 0 1px var(--accent-primary), 0 0 15px rgba(204, 255, 0, 0.05)' : 'none',
         }}
@@ -40,13 +40,13 @@ const PremiumSelect = ({ options, value, onChange, placeholder = 'Select an opti
             <div style={{ width: '12px', height: '12px', borderRadius: '3px', background: selectedOption.color }} />
           )}
           {selectedOption?.icon && selectedOption.icon}
-          <span style={{ color: selectedOption ? 'white' : '#a1a1aa' }}>
+          <span style={{ color: selectedOption ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
             {selectedOption ? selectedOption.label : placeholder}
           </span>
         </div>
         <ChevronDown
           size={16}
-          color="#a1a1aa"
+          color="var(--text-secondary)"
           style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease' }}
         />
       </button>
@@ -60,9 +60,9 @@ const PremiumSelect = ({ options, value, onChange, placeholder = 'Select an opti
             top: 'calc(100% + 8px)',
             left: 0,
             width: '100%',
-            background: 'rgba(24, 24, 27, 0.95)',
+            background: 'var(--bg-glass)',
             backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            border: '1px solid var(--border-color)',
             borderRadius: '12px',
             boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)',
             padding: '0.5rem',
@@ -93,12 +93,12 @@ const PremiumSelect = ({ options, value, onChange, placeholder = 'Select an opti
                       borderRadius: '8px',
                       cursor: 'pointer',
                       transition: 'background 0.2s ease',
-                      color: 'white',
+                      color: 'var(--text-primary)',
                       fontSize: '0.9rem',
                       textAlign: 'left',
                     }}
                     onMouseEnter={(e) => {
-                      if (!isSelected) e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                      if (!isSelected) e.currentTarget.style.background = 'var(--border-color)';
                     }}
                     onMouseLeave={(e) => {
                       if (!isSelected) e.currentTarget.style.background = 'transparent';
@@ -117,7 +117,7 @@ const PremiumSelect = ({ options, value, onChange, placeholder = 'Select an opti
                     {/* Icon */}
                     {option.icon && option.icon}
 
-                    <span style={{ fontWeight: isSelected ? 600 : 400, color: isSelected ? 'var(--accent-primary)' : 'white' }}>
+                    <span style={{ fontWeight: isSelected ? 600 : 400, color: isSelected ? 'var(--accent-primary)' : 'var(--text-primary)' }}>
                       {option.label}
                     </span>
                   </button>

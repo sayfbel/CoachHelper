@@ -176,7 +176,7 @@ const Members = () => {
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '2rem', paddingBottom: '4rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+      <div className="responsive-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(204, 255, 0, 0.08)', border: '1px solid rgba(204, 255, 0, 0.2)', padding: '0.4rem 1rem', borderRadius: '30px', color: 'var(--accent-primary)', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>
             <span>User Management</span>
@@ -190,35 +190,35 @@ const Members = () => {
       {/* Stats Cards */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1.5rem' }}>
         {/* Total Users */}
-        <div style={{ position: 'relative', overflow: 'hidden', backgroundColor: '#121212', borderRadius: '24px', padding: '1.75rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: '1rem', transition: 'var(--transition)' }} className="card-hover">
+        <div style={{ position: 'relative', overflow: 'hidden', backgroundColor: 'var(--bg-secondary)', borderRadius: '24px', padding: '1.75rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: '1rem', transition: 'var(--transition)' }} className="card-hover">
           <div style={{ position: 'absolute', top: '-20px', right: '-20px', width: '100px', height: '100px', background: 'var(--accent-primary)', filter: 'blur(50px)', opacity: 0.15, borderRadius: '50%' }}></div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 1 }}>
-            <span style={{ color: '#a1a1aa', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Total Users</span>
+            <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Total Users</span>
             <div style={{ background: 'rgba(204, 255, 0, 0.1)', padding: '0.6rem', borderRadius: '14px', border: '1px solid rgba(204, 255, 0, 0.2)' }}>
               <Users size={20} color="var(--accent-primary)" />
             </div>
           </div>
-          <div style={{ fontSize: '3.5rem', fontWeight: 900, fontFamily: 'var(--font-title)', color: 'white', lineHeight: 1, position: 'relative', zIndex: 1 }}>{totalUsers}</div>
+          <div style={{ fontSize: '3.5rem', fontWeight: 900, fontFamily: 'var(--font-title)', color: 'var(--text-primary)', lineHeight: 1, position: 'relative', zIndex: 1 }}>{totalUsers}</div>
         </div>
         
         {/* Active vs Inactive Ring */}
-        <div style={{ backgroundColor: '#121212', borderRadius: '24px', padding: '1.75rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1.5rem', transition: 'var(--transition)' }} className="card-hover">
+        <div style={{ backgroundColor: 'var(--bg-secondary)', borderRadius: '24px', padding: '1.75rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1.5rem', transition: 'var(--transition)' }} className="responsive-header card-hover">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem', flex: 1 }}>
-            <span style={{ color: '#a1a1aa', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Active vs Inactive</span>
+            <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Active vs Inactive</span>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.02)', padding: '0.4rem 0.6rem', borderRadius: '8px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--success)', boxShadow: '0 0 10px var(--success)' }}></div>
                   <span style={{ color: '#d4d4d8', fontSize: '0.85rem', fontWeight: 500 }}>Active</span>
                 </div>
-                <span style={{ color: 'white', fontWeight: 700, fontFamily: 'var(--font-title)', fontSize: '1.1rem' }}>{activeCount}</span>
+                <span style={{ color: 'var(--text-primary)', fontWeight: 700, fontFamily: 'var(--font-title)', fontSize: '1.1rem' }}>{activeCount}</span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(255,255,255,0.02)', padding: '0.4rem 0.6rem', borderRadius: '8px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--danger)', boxShadow: '0 0 10px var(--danger)' }}></div>
                   <span style={{ color: '#d4d4d8', fontSize: '0.85rem', fontWeight: 500 }}>Inactive</span>
                 </div>
-                <span style={{ color: 'white', fontWeight: 700, fontFamily: 'var(--font-title)', fontSize: '1.1rem' }}>{inactiveCount}</span>
+                <span style={{ color: 'var(--text-primary)', fontWeight: 700, fontFamily: 'var(--font-title)', fontSize: '1.1rem' }}>{inactiveCount}</span>
               </div>
             </div>
           </div>
@@ -229,22 +229,22 @@ const Members = () => {
             boxShadow: '0 0 25px rgba(0,0,0,0.4)',
             flexShrink: 0
           }}>
-            <div style={{ width: '70px', height: '70px', borderRadius: '50%', background: '#121212', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid rgba(255,255,255,0.05)' }}>
+            <div style={{ width: '70px', height: '70px', borderRadius: '50%', background: 'var(--bg-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '2px solid rgba(255,255,255,0.05)' }}>
                <Activity size={20} color="#a1a1aa" />
             </div>
           </div>
         </div>
 
         {/* Platform Admins */}
-        <div style={{ position: 'relative', overflow: 'hidden', backgroundColor: '#121212', borderRadius: '24px', padding: '1.75rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: '1rem', transition: 'var(--transition)' }} className="card-hover">
-          <div style={{ position: 'absolute', bottom: '-20px', left: '-20px', width: '100px', height: '100px', background: '#3b82f6', filter: 'blur(50px)', opacity: 0.15, borderRadius: '50%' }}></div>
+        <div style={{ position: 'relative', overflow: 'hidden', backgroundColor: 'var(--bg-secondary)', borderRadius: '24px', padding: '1.75rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column', gap: '1rem', transition: 'var(--transition)' }} className="card-hover">
+          <div style={{ position: 'absolute', bottom: '-20px', left: '-20px', width: '100px', height: '100px', background: 'var(--border-hover)', filter: 'blur(50px)', opacity: 0.15, borderRadius: '50%' }}></div>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', zIndex: 1 }}>
-            <span style={{ color: '#a1a1aa', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Platform Admins</span>
+            <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Platform Admins</span>
             <div style={{ background: 'rgba(255, 255, 255, 0.05)', padding: '0.6rem', borderRadius: '14px', border: '1px solid rgba(255,255,255,0.1)' }}>
               <Shield size={20} color="white" />
             </div>
           </div>
-          <div style={{ fontSize: '3.5rem', fontWeight: 900, fontFamily: 'var(--font-title)', color: 'white', lineHeight: 1, position: 'relative', zIndex: 1 }}>{adminCount}</div>
+          <div style={{ fontSize: '3.5rem', fontWeight: 900, fontFamily: 'var(--font-title)', color: 'var(--text-primary)', lineHeight: 1, position: 'relative', zIndex: 1 }}>{adminCount}</div>
         </div>
       </div>
 
@@ -259,7 +259,7 @@ const Members = () => {
               className="input-field"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              style={{ paddingLeft: '2.5rem', background: 'rgba(0,0,0,0.2)', border: '1px solid rgba(255,255,255,0.05)' }}
+              style={{ paddingLeft: '2.5rem', background: 'var(--bg-primary)', border: '1px solid var(--border-color)' }}
             />
           </div>
           <div style={{ width: '150px' }}>
@@ -273,7 +273,7 @@ const Members = () => {
         </div>
 
         {/* Premium Data Table */}
-        <div style={{ overflowX: 'visible', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ overflowX: 'auto', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '800px' }}>
             <thead>
               <tr style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
@@ -286,9 +286,9 @@ const Members = () => {
             </thead>
             <tbody>
               {isLoading ? (
-                <tr><td colSpan="5" style={{ padding: '2rem', textAlign: 'center', color: '#a1a1aa' }}>Loading members...</td></tr>
+                <tr><td colSpan="5" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading members...</td></tr>
               ) : filteredMembers.length === 0 ? (
-                <tr><td colSpan="5" style={{ padding: '2rem', textAlign: 'center', color: '#a1a1aa' }}>No members match your criteria.</td></tr>
+                <tr><td colSpan="5" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>No members match your criteria.</td></tr>
               ) : filteredMembers.map((member, idx) => (
                 <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', backgroundColor: member.role === 'admin' ? 'rgba(204, 255, 0, 0.02)' : 'transparent' }}>
                   <td style={{ padding: '1.25rem 1.5rem' }}>
@@ -336,7 +336,7 @@ const Members = () => {
                       <div ref={openDropdownId === member.id ? dropdownRef : null}>
                         <button 
                           onClick={() => setOpenDropdownId(openDropdownId === member.id ? null : member.id)}
-                          style={{ background: openDropdownId === member.id ? 'rgba(255,255,255,0.1)' : 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', borderRadius: '50%', padding: '0.3rem', transition: '0.2s' }}>
+                          style={{ background: openDropdownId === member.id ? 'var(--border-color)' : 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', borderRadius: '50%', padding: '0.3rem', transition: '0.2s' }}>
                           <MoreVertical size={18} />
                         </button>
                         
@@ -358,16 +358,16 @@ const Members = () => {
                             minWidth: '160px',
                             textAlign: 'left'
                           }}>
-                            <button onClick={() => openAddOfferModal(member)} className="dropdown-item" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', color: '#d4d4d8', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500, transition: '0.2s' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(204,255,0,0.1)'; e.currentTarget.style.color = 'var(--accent-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = '#d4d4d8'; }}>
+                            <button onClick={() => openAddOfferModal(member)} className="dropdown-item" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', color: 'var(--text-secondary)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500, transition: '0.2s' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(204,255,0,0.1)'; e.currentTarget.style.color = 'var(--accent-primary)'; }} onMouseLeave={(e) => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = 'var(--text-secondary)'; }}>
                               <PlusCircle size={14} /> Add Offer
                             </button>
-                            <button onClick={() => handleRestartOffer(member.id)} className="dropdown-item" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', color: '#d4d4d8', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500, transition: '0.2s' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }} onMouseLeave={(e) => { e.currentTarget.style.background = 'none' }}>
+                            <button onClick={() => handleRestartOffer(member.id)} className="dropdown-item" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', color: 'var(--text-secondary)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500, transition: '0.2s' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--border-color)' }} onMouseLeave={(e) => { e.currentTarget.style.background = 'none' }}>
                               <RotateCcw size={14} /> Restart Offer
                             </button>
-                            <button onClick={() => handleEndOffer(member.id)} className="dropdown-item" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', color: '#d4d4d8', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500, transition: '0.2s' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.05)' }} onMouseLeave={(e) => { e.currentTarget.style.background = 'none' }}>
+                            <button onClick={() => handleEndOffer(member.id)} className="dropdown-item" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', color: 'var(--text-secondary)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500, transition: '0.2s' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--border-color)' }} onMouseLeave={(e) => { e.currentTarget.style.background = 'none' }}>
                               <StopCircle size={14} /> End Offer
                             </button>
-                            <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '4px 0' }} />
+                            <div style={{ height: '1px', background: 'var(--border-color)', margin: '4px 0' }} />
                             <button onClick={() => handleDelete(member.id)} className="dropdown-item" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'none', border: 'none', color: 'var(--danger)', padding: '0.5rem 1rem', borderRadius: '8px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: 500, transition: '0.2s' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)' }} onMouseLeave={(e) => { e.currentTarget.style.background = 'none' }}>
                               <Trash2 size={14} /> Delete User
                             </button>
@@ -396,16 +396,16 @@ const Members = () => {
           zIndex: 9999
         }}>
           <div className="card animate-fade-in" style={{ width: '400px', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem', position: 'relative' }}>
-            <button onClick={() => setIsOfferModalOpen(false)} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'none', border: 'none', color: '#a1a1aa', cursor: 'pointer' }}>
+            <button onClick={() => setIsOfferModalOpen(false)} style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer' }}>
               <X size={20} />
             </button>
             <div>
-              <h2 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-title)', color: 'white', fontWeight: 800 }}>Add Offer</h2>
-              <p style={{ color: '#a1a1aa', fontSize: '0.9rem', marginTop: '0.25rem' }}>Select an offer to assign to {selectedUserForOffer?.name}</p>
+              <h2 style={{ fontSize: '1.5rem', fontFamily: 'var(--font-title)', color: 'var(--text-primary)', fontWeight: 800 }}>Add Offer</h2>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '0.25rem' }}>Select an offer to assign to {selectedUserForOffer?.name}</p>
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: '#d4d4d8' }}>Select Offer</label>
+              <label style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-secondary)' }}>Select Offer</label>
               <PremiumSelect 
                 options={availableOffers.map(offer => ({
                   value: offer.id.toString(),

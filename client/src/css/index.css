@@ -5,9 +5,12 @@
   --bg-primary: #050505;          /* Deep base black background */
   --bg-app: #0d0d0d;              /* Desktop app frame background */
   --bg-secondary: #141414;        /* Bento card / secondary container background */
+  --bg-tertiary: #27272a;         /* Tertiary / active item background */
+  --bg-active: #27272a;           /* Active nav background */
   --bg-glass: rgba(13, 13, 13, 0.85);
   
   --accent-primary: #ccff00;      /* Neon Green/Yellow */
+  --accent-primary-faded: rgba(204, 255, 0, 0.08);
   --accent-secondary: #ffffff;    /* White */
   --accent-hover: #b3e600;
   --text-primary: #ffffff;
@@ -34,6 +37,32 @@
   --border-radius-lg: 24px;
 }
 
+:root[data-theme='light'] {
+  --bg-primary: #f4f4f5;
+  --bg-app: #ffffff;
+  --bg-secondary: #ffffff;
+  --bg-tertiary: rgba(0, 0, 0, 0.05);
+  --bg-active: rgba(0, 0, 0, 0.05);
+  --bg-glass: rgba(255, 255, 255, 0.85);
+  
+  --accent-primary: #ccff00;
+  --accent-primary-faded: rgba(204, 255, 0, 0.15);
+  --accent-secondary: #000000;
+  --accent-hover: #b3e600;
+  
+  --text-primary: #121212;
+  --text-secondary: #52525b;
+  --text-muted: #a1a1aa;
+  
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-hover: rgba(0, 0, 0, 0.25);
+  
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 15px 35px -5px rgba(0, 0, 0, 0.1), 0 10px 15px -6px rgba(0, 0, 0, 0.05);
+  --shadow-glow: 0 0 25px rgba(204, 255, 0, 0.3);
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -56,6 +85,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   padding: 0;
   margin: 0;
+}
+
+body[data-theme='light'] {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800' viewBox='0 0 800 800'%3E%3Crect x='40' y='40' width='720' height='720' fill='none' stroke='rgba(0,0,0,0.03)' stroke-width='1.5' rx='16'/%3E%3Cline x1='40' y1='400' x2='760' y2='400' stroke='rgba(0,0,0,0.03)' stroke-width='1.5'/%3E%3Ccircle cx='400' cy='400' r='100' fill='none' stroke='rgba(0,0,0,0.03)' stroke-width='1.5'/%3E%3Crect x='300' y='40' width='200' height='160' fill='none' stroke='rgba(0,0,0,0.03)' stroke-width='1.5'/%3E%3Crect x='300' y='600' width='200' height='160' fill='none' stroke='rgba(0,0,0,0.03)' stroke-width='1.5'/%3E%3Cpath d='M 200 40 A 200 200 0 0 0 600 40' fill='none' stroke='rgba(0,0,0,0.03)' stroke-width='1.5'/%3E%3Cpath d='M 200 760 A 200 200 0 0 1 600 760' fill='none' stroke='rgba(0,0,0,0.03)' stroke-width='1.5'/%3E%3C/svg%3E");
 }
 
 /* 1. Styled Application Frame Layout */
@@ -261,21 +294,33 @@ button {
 }
 
 .btn-secondary {
-  background: #181818;
+  background: var(--bg-tertiary);
   color: var(--text-primary);
   border: 1px solid var(--border-color);
 }
 
 .btn-secondary:hover {
-  background: #242424;
-  border-color: rgba(255, 255, 255, 0.2);
+  background: var(--border-color);
+  border-color: var(--border-hover);
+  transform: translateY(-2px);
+}
+
+.btn-danger {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.btn-danger:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--danger);
   transform: translateY(-2px);
 }
 
 .input-field {
   width: 100%;
   padding: 0.85rem 1.15rem;
-  background: #121212;
+  background: var(--bg-primary);
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   color: var(--text-primary);
@@ -287,7 +332,7 @@ button {
 .input-field:focus {
   outline: none;
   border-color: var(--accent-primary);
-  background: #161616;
+  background: var(--bg-secondary);
   box-shadow: 0 0 0 1px var(--accent-primary), 0 0 15px rgba(204, 255, 0, 0.05);
 }
 
@@ -571,3 +616,232 @@ button {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
 }
+
+/* --- Mobile Navigation & Layout Changes --- */
+
+@media (max-width: 768px) {
+  /* Hide sidebar on mobile */
+  .desktop-sidebar {
+    display: none !important;
+  }
+  /* Adjust main container to take full width */
+  .main-content {
+    width: 100% !important;
+    margin: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    /* We also reset height from 100vh on mobile to prevent squishing if virtual keyboard appears, but let's keep it 100% for now */
+  }
+  /* On mobile, add padding bottom to scrollable content to clear nav */
+  .scroll-content {
+    padding-bottom: 90px !important;
+  }
+}
+
+/* Hide mobile nav on desktop */
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    display: block;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 70px;
+    z-index: 1000;
+  }
+  
+  .mobile-nav-bg-container {
+    position: absolute;
+    top: -20px; /* Curve goes above the 70px box */
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    filter: drop-shadow(0px -5px 15px rgba(0,0,0,0.3));
+  }
+  
+  .mobile-nav-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 10px;
+  }
+  
+  .mobile-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    color: #8e8e93; /* Muted grey like the image */
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+    width: 50px;
+    background: transparent;
+    border: none;
+    font-family: inherit;
+  }
+  
+  .mobile-nav-item.active {
+    color: #000000; /* Black for active item */
+  }
+  
+  .mobile-nav-item svg {
+    color: inherit;
+    transition: transform 0.2s;
+  }
+  
+  .mobile-nav-item:active svg {
+    transform: scale(0.9);
+  }
+  
+  .mobile-nav-fab {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: -25px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background-color: #1a1a1a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: 0.2s;
+    border: none;
+    z-index: 10;
+  }
+  
+  .mobile-nav-fab:active {
+    transform: translateX(-50%) scale(0.95);
+  }
+
+  /* --- Generic Responsive Utilities --- */
+  .responsive-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+  }
+  
+  .top-bar-container {
+    flex-direction: row !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+  }
+
+  .desktop-actions {
+    display: none !important;
+  }
+  
+  .mobile-hamburger {
+    display: block !important;
+  }
+  
+  .responsive-grid-split {
+    grid-template-columns: 1fr !important;
+  }
+
+  .responsive-grid-3 {
+    grid-template-columns: 1fr !important;
+  }
+
+  .responsive-flex-wrap {
+    flex-wrap: wrap !important;
+  }
+  
+  .mobile-w-full {
+    width: 100% !important;
+  }
+  
+  .mobile-chart-container {
+    margin-left: 0 !important;
+    margin-top: 80px !important;
+  }
+  
+  .mobile-chart-stats {
+    position: absolute !important;
+    top: 50px !important;
+    left: 1.5rem !important;
+    bottom: auto !important;
+  }
+}
+
+/* --- Collapsed Desktop Sidebar (Tablets / Smaller Screens) --- */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .desktop-sidebar {
+    margin-right: 1rem !important;
+  }
+  .sidebar-container {
+    width: 80px !important;
+    padding: 1.5rem 0.5rem !important;
+    align-items: center !important;
+  }
+  .sidebar-container .sidebar-text {
+    display: none !important;
+  }
+  .sidebar-container nav button {
+    justify-content: center !important;
+    padding: 0.75rem !important;
+  }
+  .sidebar-container > div:first-child {
+    justify-content: center !important;
+  }
+}
+
+/* Sidebar Responsive Styles */
+@media (max-width: 1200px) {
+  .sidebar-container {
+    width: 80px !important;
+    padding: 1.5rem 0.5rem !important;
+    align-items: center;
+  }
+  
+  .sidebar-text {
+    display: none !important;
+  }
+  
+  /* Remove 70px height constraints on any elements inside if they exist */
+  .sidebar-container > div {
+    align-items: center !important;
+    justify-content: center !important;
+  }
+}
+
+/* --- Custom Scrollbar (Mobile-like) --- */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+}
+
+

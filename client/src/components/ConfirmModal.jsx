@@ -33,7 +33,7 @@ const ConfirmModal = ({ isOpen, title, description, onConfirm, onCancel }) => {
       animation: 'fadeIn 0.2s ease-out'
     }}>
       <div style={{
-        backgroundColor: '#121212',
+        backgroundColor: 'var(--bg-secondary)',
         borderRadius: '24px',
         padding: '2.5rem',
         maxWidth: '450px',
@@ -63,7 +63,7 @@ const ConfirmModal = ({ isOpen, title, description, onConfirm, onCancel }) => {
         <h2 style={{
           fontSize: '1.5rem',
           fontWeight: 800,
-          color: 'white',
+          color: 'var(--text-primary)',
           marginBottom: '1rem',
           fontFamily: 'var(--font-title)'
         }}>
@@ -81,47 +81,17 @@ const ConfirmModal = ({ isOpen, title, description, onConfirm, onCancel }) => {
 
         <div style={{ display: 'flex', gap: '1rem', width: '100%' }}>
           <button 
+            className="btn btn-secondary"
             onClick={onCancel}
-            style={{
-              flex: 1,
-              padding: '0.85rem',
-              borderRadius: '30px',
-              border: '1px solid #3f3f46',
-              background: 'transparent',
-              color: 'white',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.5rem',
-              transition: '0.2s'
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.background = '#27272a' }}
-            onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}
+            style={{ flex: 1 }}
           >
             <X size={18} /> No, Cancel
           </button>
           
           <button 
+            className="btn btn-primary"
             onClick={onConfirm}
-            style={{
-              flex: 1,
-              padding: '0.85rem',
-              borderRadius: '30px',
-              border: 'none',
-              background: 'var(--accent-primary)',
-              color: 'black',
-              fontWeight: 800,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '0.5rem',
-              transition: '0.2s'
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)' }}
-            onMouseLeave={(e) => { e.currentTarget.style.transform = 'translateY(0)' }}
+            style={{ flex: 1 }}
           >
             <Check size={18} /> Yes, Proceed
           </button>

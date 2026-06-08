@@ -115,9 +115,9 @@ const Offers = () => {
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+      <div className="responsive-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(204, 255, 0, 0.08)', border: '1px solid rgba(204, 255, 0, 0.2)', padding: '0.4rem 1rem', borderRadius: '30px', color: 'var(--accent-primary)', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--accent-primary-faded)', border: '1px solid var(--border-color)', padding: '0.4rem 1rem', borderRadius: '30px', color: 'var(--accent-primary)', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>
             <span>Subscription Plans</span>
           </div>
           <h1 style={{ fontSize: '2.5rem', lineHeight: '1.05', fontFamily: 'var(--font-title)', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '-0.03em' }}>
@@ -129,36 +129,40 @@ const Offers = () => {
         </button>
       </div>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem', width: '100%' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '2rem', width: '100%', padding: '1rem' }}>
         {offers.map((offer) => (
           <div
             key={offer.id}
             className="card text-center relative"
             style={{
+              border: offer.is_popular ? '1px solid var(--accent-primary)' : '1px solid var(--border-color)',
               borderTop: `4px solid ${offer.is_popular ? 'var(--accent-primary)' : offer.id === 1 ? 'var(--border-color)' : 'var(--success)'}`,
               transform: offer.is_popular ? 'scale(1.02)' : 'none',
               zIndex: offer.is_popular ? 5 : 1,
+              padding: '1rem',
+              borderRadius: '24px',
+              position: 'relative',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              boxShadow: offer.is_popular ? '0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(204,255,0,0.05)' : 'none'
+              boxShadow: offer.is_popular ? '0 20px 40px rgba(0,0,0,0.5), 0 0 20px var(--accent-primary-faded)' : 'none'
             }}
           >
             {offer.is_popular && (
-              <div style={{ position: 'absolute', top: '-13px', left: '50%', transform: 'translateX(-50%)', background: 'var(--accent-primary)', color: 'black', padding: '3px 12px', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <div style={{ position: 'absolute', top: '-13px', left: '50%', transform: 'translateX(-50%)', background: 'var(--accent-primary)', color: 'var(--bg-primary)', padding: '3px 12px', borderRadius: '10px', fontSize: '0.7rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 MOST POPULAR
               </div>
             )}
             <div>
               <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{offer.name}</h3>
-              <p style={{ fontSize: '3rem', fontWeight: 900, margin: '1rem 0', fontFamily: 'var(--font-title)', color: 'white' }}>
+              <p style={{ fontSize: '3rem', fontWeight: 900, margin: '1rem 0', fontFamily: 'var(--font-title)', color: 'var(--text-primary)' }}>
                 ${offer.price}<span style={{ fontSize: '1rem', color: 'var(--text-secondary)', fontWeight: 'normal' }}>/{offer.period}</span>
               </p>
               <p className="text-secondary text-sm mb-8 text-truncate" title={offer.description} style={{ maxWidth: '100%' }}>{offer.description}</p>
             </div>
             <div style={{ display: 'flex', gap: '1rem' }}>
               <button onClick={() => handleEditOffer(offer)} className={offer.is_popular ? "btn btn-primary" : "btn btn-secondary"} style={{ flex: 1, padding: '0.75rem 1rem' }}>Edit</button>
-              <button onClick={() => handleDisableOffer(offer)} style={{ background: 'transparent', border: '1px solid rgba(239,68,68,0.3)', color: 'var(--danger)', borderRadius: 'var(--border-radius)', padding: '0.75rem 1rem', cursor: 'pointer', transition: 'var(--transition)' }} onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(239,68,68,0.1)' }} onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent' }}>Delete</button>
+              <button onClick={() => handleDisableOffer(offer)} className="btn btn-danger" style={{ flex: 1 }}>Delete</button>
             </div>
           </div>
         ))}

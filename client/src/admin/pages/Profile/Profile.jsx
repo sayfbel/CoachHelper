@@ -49,14 +49,14 @@ const Profile = () => {
         <div style={{ display: 'flex', alignItems: 'center', gap: '2rem', position: 'relative', zIndex: 1 }}>
           <div style={{ 
             width: '100px', height: '100px', borderRadius: '50%', 
-            background: '#1a1a1a', border: '2px solid var(--accent-primary)',
+            background: 'var(--bg-secondary)', border: '2px solid var(--accent-primary)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             boxShadow: '0 0 30px rgba(204,255,0,0.15)'
           }}>
             <User size={48} color="var(--accent-primary)" />
           </div>
           <div>
-            <h1 style={{ fontSize: '2.5rem', fontFamily: 'var(--font-title)', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '-0.03em', color: 'white', marginBottom: '0.25rem' }}>
+            <h1 style={{ fontSize: '2.5rem', fontFamily: 'var(--font-title)', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '-0.03em', color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
               Your <span style={{ color: 'var(--accent-primary)' }}>Profile</span>
             </h1>
             <p style={{ color: 'var(--text-secondary)', fontSize: '1.05rem' }}>Manage your personal information {isClient && "and subscription details"}.</p>
@@ -75,36 +75,36 @@ const Profile = () => {
           border: '1px solid rgba(255,255,255,0.05)',
           boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
         }}>
-          <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: 'white', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+          <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             <User size={22} color="var(--accent-primary)" /> Personal Information
           </h2>
           <form onSubmit={handleSave} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
             <div>
-              <label style={{ display: 'block', color: '#a1a1aa', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600, marginBottom: '0.5rem' }}>Full Name</label>
+              <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600, marginBottom: '0.5rem' }}>Full Name</label>
               <div style={{ position: 'relative' }}>
                 <User size={18} color="var(--accent-primary)" style={{ position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)' }} />
-                <input type="text" name="name" value={formData.name} onChange={handleChange} style={{ width: '100%', padding: '1rem 1rem 1rem 3rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: 'white', outline: 'none', transition: 'border-color 0.2s', fontSize: '0.95rem' }} onFocus={(e) => e.target.style.borderColor = 'var(--accent-primary)'} onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                <input type="text" name="name" value={formData.name} onChange={handleChange} style={{ width: '100%', padding: '1rem 1rem 1rem 3rem', background: 'var(--bg-tertiary)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: 'var(--text-primary)', outline: 'none', transition: 'border-color 0.2s', fontSize: '0.95rem' }} onFocus={(e) => e.target.style.borderColor = 'var(--accent-primary)'} onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'} />
               </div>
             </div>
             <div>
-              <label style={{ display: 'block', color: '#a1a1aa', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600, marginBottom: '0.5rem' }}>Email Address</label>
+              <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600, marginBottom: '0.5rem' }}>Email Address</label>
               <div style={{ position: 'relative' }}>
                 <Mail size={18} color="var(--accent-primary)" style={{ position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)' }} />
-                <input type="email" name="email" value={formData.email} onChange={handleChange} style={{ width: '100%', padding: '1rem 1rem 1rem 3rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: 'white', outline: 'none', transition: 'border-color 0.2s', fontSize: '0.95rem' }} onFocus={(e) => e.target.style.borderColor = 'var(--accent-primary)'} onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                <input type="email" name="email" value={formData.email} onChange={handleChange} style={{ width: '100%', padding: '1rem 1rem 1rem 3rem', background: 'var(--bg-tertiary)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: 'var(--text-primary)', outline: 'none', transition: 'border-color 0.2s', fontSize: '0.95rem' }} onFocus={(e) => e.target.style.borderColor = 'var(--accent-primary)'} onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'} />
               </div>
             </div>
             <div>
-              <label style={{ display: 'block', color: '#a1a1aa', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600, marginBottom: '0.5rem' }}>Phone Number</label>
+              <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600, marginBottom: '0.5rem' }}>Phone Number</label>
               <div style={{ position: 'relative' }}>
                 <Phone size={18} color="var(--accent-primary)" style={{ position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)' }} />
-                <input type="tel" name="phone" value={formData.phone} onChange={handleChange} style={{ width: '100%', padding: '1rem 1rem 1rem 3rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: 'white', outline: 'none', transition: 'border-color 0.2s', fontSize: '0.95rem' }} onFocus={(e) => e.target.style.borderColor = 'var(--accent-primary)'} onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                <input type="tel" name="phone" value={formData.phone} onChange={handleChange} style={{ width: '100%', padding: '1rem 1rem 1rem 3rem', background: 'var(--bg-tertiary)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: 'var(--text-primary)', outline: 'none', transition: 'border-color 0.2s', fontSize: '0.95rem' }} onFocus={(e) => e.target.style.borderColor = 'var(--accent-primary)'} onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'} />
               </div>
             </div>
             <div>
-              <label style={{ display: 'block', color: '#a1a1aa', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600, marginBottom: '0.5rem' }}>Club / Organization</label>
+              <label style={{ display: 'block', color: 'var(--text-secondary)', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600, marginBottom: '0.5rem' }}>Club / Organization</label>
               <div style={{ position: 'relative' }}>
                 <Building2 size={18} color="var(--accent-primary)" style={{ position: 'absolute', left: '1.25rem', top: '50%', transform: 'translateY(-50%)' }} />
-                <input type="text" name="club" value={formData.club} onChange={handleChange} style={{ width: '100%', padding: '1rem 1rem 1rem 3rem', background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: 'white', outline: 'none', transition: 'border-color 0.2s', fontSize: '0.95rem' }} onFocus={(e) => e.target.style.borderColor = 'var(--accent-primary)'} onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.08)'} />
+                <input type="text" name="club" value={formData.club} onChange={handleChange} style={{ width: '100%', padding: '1rem 1rem 1rem 3rem', background: 'var(--bg-tertiary)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '12px', color: 'var(--text-primary)', outline: 'none', transition: 'border-color 0.2s', fontSize: '0.95rem' }} onFocus={(e) => e.target.style.borderColor = 'var(--accent-primary)'} onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'} />
               </div>
             </div>
             <button type="submit" className="btn btn-primary" style={{ marginTop: '1rem', padding: '1rem 2rem', fontSize: '1rem', alignSelf: 'flex-start', boxShadow: '0 10px 20px -10px rgba(204,255,0,0.5)' }}>
@@ -118,7 +118,7 @@ const Profile = () => {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
             {/* Active Offer */}
             <div className="card" style={{ padding: '2.5rem', backgroundColor: 'rgba(18,18,18,0.6)', backdropFilter: 'blur(10px)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 10px 40px rgba(0,0,0,0.5)' }}>
-              <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: 'white', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 <ShieldCheck size={22} color="var(--accent-primary)" /> Current Active Offer
               </h2>
               <div style={{ background: 'linear-gradient(145deg, rgba(204, 255, 0, 0.08) 0%, rgba(204, 255, 0, 0.02) 100%)', border: '1px solid rgba(204, 255, 0, 0.2)', borderRadius: '16px', padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
@@ -127,9 +127,9 @@ const Profile = () => {
                 </div>
                 <div style={{ position: 'relative', zIndex: 1 }}>
                   <div style={{ color: 'var(--accent-primary)', fontWeight: 800, fontSize: '1.2rem', marginBottom: '0.2rem', textTransform: 'uppercase' }}>Monthly Plan</div>
-                  <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Renews on <span style={{ color: 'white', fontWeight: 600 }}>Nov 05, 2026</span></div>
+                  <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Renews on <span style={{ color: 'var(--text-primary)', fontWeight: 600 }}>Nov 05, 2026</span></div>
                 </div>
-                <div style={{ fontSize: '2rem', fontWeight: 900, color: 'white', position: 'relative', zIndex: 1 }}>
+                <div style={{ fontSize: '2rem', fontWeight: 900, color: 'var(--text-primary)', position: 'relative', zIndex: 1 }}>
                   $29<span style={{ fontSize: '1rem', color: 'var(--text-secondary)', fontWeight: 600 }}>/mo</span>
                 </div>
               </div>
@@ -137,7 +137,7 @@ const Profile = () => {
 
             {/* Offer History */}
             <div className="card" style={{ padding: '2.5rem', backgroundColor: 'rgba(18,18,18,0.6)', backdropFilter: 'blur(10px)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', boxShadow: '0 10px 40px rgba(0,0,0,0.5)', flex: 1 }}>
-              <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: 'white', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+              <h2 style={{ fontSize: '1.3rem', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                 <CreditCard size={22} color="var(--accent-primary)" /> Offer History
               </h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
@@ -156,11 +156,11 @@ const Profile = () => {
                   onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.02)'}
                   >
                     <div>
-                      <div style={{ color: 'white', fontWeight: 600, fontSize: '1rem', marginBottom: '0.2rem' }}>{item.plan}</div>
-                      <div style={{ color: '#a1a1aa', fontSize: '0.85rem' }}>{item.date}</div>
+                      <div style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '1rem', marginBottom: '0.2rem' }}>{item.plan}</div>
+                      <div style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{item.date}</div>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
-                      <span style={{ color: 'white', fontWeight: 700, fontSize: '1.1rem' }}>{item.amount}</span>
+                      <span style={{ color: 'var(--text-primary)', fontWeight: 700, fontSize: '1.1rem' }}>{item.amount}</span>
                       <span style={{ background: 'rgba(34, 197, 94, 0.1)', color: '#22c55e', padding: '4px 12px', borderRadius: '16px', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{item.status}</span>
                     </div>
                   </div>

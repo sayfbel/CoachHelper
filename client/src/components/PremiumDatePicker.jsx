@@ -90,7 +90,7 @@ const PremiumDatePicker = ({ value, onChange, placeholder = 'Select Date' }) => 
             borderRadius: '8px',
             border: 'none',
             background: isSelected ? 'var(--accent-primary)' : 'transparent',
-            color: isSelected ? 'black' : 'white',
+            color: isSelected ? 'var(--accent-secondary)' : 'var(--text-primary)',
             fontWeight: isSelected ? 'bold' : 'normal',
             cursor: 'pointer',
             fontSize: '0.85rem',
@@ -130,17 +130,17 @@ const PremiumDatePicker = ({ value, onChange, placeholder = 'Select Date' }) => 
           alignItems: 'center',
           justifyContent: 'space-between',
           cursor: 'pointer',
-          background: isOpen ? '#161616' : '#121212',
+          background: isOpen ? 'var(--bg-primary)' : 'var(--bg-secondary)',
           borderColor: isOpen ? 'var(--accent-primary)' : 'var(--border-color)',
           boxShadow: isOpen ? '0 0 0 1px var(--accent-primary), 0 0 15px rgba(204, 255, 0, 0.05)' : 'none',
         }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ color: value ? 'white' : '#a1a1aa' }}>
+          <span style={{ color: value ? 'var(--text-primary)' : 'var(--text-secondary)' }}>
             {value ? new Date(value).toLocaleDateString() : placeholder}
           </span>
         </div>
-        <CalendarIcon size={16} color={value ? 'var(--accent-primary)' : '#a1a1aa'} />
+        <CalendarIcon size={16} color={value ? 'var(--accent-primary)' : 'var(--text-secondary)'} />
       </button>
 
       {/* Popover Calendar */}
@@ -152,9 +152,9 @@ const PremiumDatePicker = ({ value, onChange, placeholder = 'Select Date' }) => 
             top: 'calc(100% + 8px)',
             left: 0,
             width: '280px',
-            background: 'rgba(24, 24, 27, 0.95)',
+            background: 'var(--bg-glass)',
             backdropFilter: 'blur(10px)',
-            border: '1px solid rgba(255, 255, 255, 0.1)',
+            border: '1px solid var(--border-color)',
             borderRadius: '16px',
             boxShadow: '0 10px 40px rgba(0, 0, 0, 0.5)',
             padding: '1.25rem',
@@ -163,24 +163,24 @@ const PremiumDatePicker = ({ value, onChange, placeholder = 'Select Date' }) => 
         >
           {/* Header */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-            <button onClick={handlePrev} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.2rem', borderRadius: '6px' }} onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.1)'} onMouseLeave={e => e.currentTarget.style.background='transparent'}>
+            <button onClick={handlePrev} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.2rem', borderRadius: '6px' }} onMouseEnter={e => e.currentTarget.style.background='var(--border-color)'} onMouseLeave={e => e.currentTarget.style.background='transparent'}>
               <ChevronLeft size={18} />
             </button>
             <span 
-              style={{ color: 'white', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer', padding: '0.3rem 0.6rem', borderRadius: '6px', transition: 'background 0.2s' }}
+              style={{ color: 'var(--text-primary)', fontWeight: 600, fontSize: '0.95rem', cursor: 'pointer', padding: '0.3rem 0.6rem', borderRadius: '6px', transition: 'background 0.2s' }}
               onClick={() => {
                 if (viewMode === 'days') setViewMode('months');
                 else if (viewMode === 'months') setViewMode('years');
                 else setViewMode('days');
               }}
-              onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.05)'}
+              onMouseEnter={e => e.currentTarget.style.background='var(--border-color)'}
               onMouseLeave={e => e.currentTarget.style.background='transparent'}
             >
               {viewMode === 'days' ? `${monthNames[currentMonth.getMonth()]} ${currentMonth.getFullYear()}` : 
                viewMode === 'months' ? currentMonth.getFullYear() :
                `${currentMonth.getFullYear() - 5} - ${currentMonth.getFullYear() + 6}`}
             </span>
-            <button onClick={handleNext} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.2rem', borderRadius: '6px' }} onMouseEnter={e => e.currentTarget.style.background='rgba(255,255,255,0.1)'} onMouseLeave={e => e.currentTarget.style.background='transparent'}>
+            <button onClick={handleNext} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '0.2rem', borderRadius: '6px' }} onMouseEnter={e => e.currentTarget.style.background='var(--border-color)'} onMouseLeave={e => e.currentTarget.style.background='transparent'}>
               <ChevronRight size={18} />
             </button>
           </div>
@@ -200,7 +200,7 @@ const PremiumDatePicker = ({ value, onChange, placeholder = 'Select Date' }) => 
                     style={{
                       padding: '0.75rem 0.5rem',
                       background: isSelected ? 'var(--accent-primary)' : 'transparent',
-                      color: isSelected ? 'black' : 'white',
+                      color: isSelected ? 'var(--accent-secondary)' : 'var(--text-primary)',
                       border: 'none',
                       borderRadius: '8px',
                       fontSize: '0.85rem',
@@ -234,7 +234,7 @@ const PremiumDatePicker = ({ value, onChange, placeholder = 'Select Date' }) => 
                     style={{
                       padding: '0.75rem 0.5rem',
                       background: isSelected ? 'var(--accent-primary)' : 'transparent',
-                      color: isSelected ? 'black' : 'white',
+                      color: isSelected ? 'var(--accent-secondary)' : 'var(--text-primary)',
                       border: 'none',
                       borderRadius: '8px',
                       fontSize: '0.85rem',
@@ -259,7 +259,7 @@ const PremiumDatePicker = ({ value, onChange, placeholder = 'Select Date' }) => 
               {/* Days of Week */}
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: '4px', marginBottom: '0.5rem' }}>
                 {daysOfWeek.map(day => (
-                  <div key={day} style={{ textAlign: 'center', color: '#a1a1aa', fontSize: '0.75rem', fontWeight: 600 }}>
+                  <div key={day} style={{ textAlign: 'center', color: 'var(--text-secondary)', fontSize: '0.75rem', fontWeight: 600 }}>
                     {day}
                   </div>
                 ))}

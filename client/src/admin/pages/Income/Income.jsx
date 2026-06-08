@@ -146,12 +146,12 @@ const Income = () => {
 
   return (
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+      <div className="responsive-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
         <div>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(204, 255, 0, 0.08)', border: '1px solid rgba(204, 255, 0, 0.2)', padding: '0.4rem 1rem', borderRadius: '30px', color: 'var(--accent-primary)', fontSize: '0.75rem', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '1rem' }}>
             <span>Revenue & Transactions</span>
           </div>
-          <h1 style={{ fontSize: '2.5rem', lineHeight: '1.05', fontFamily: 'var(--font-title)', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '-0.03em', color: 'white' }}>
+          <h1 style={{ fontSize: '2.5rem', lineHeight: '1.05', fontFamily: 'var(--font-title)', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
             Platform <span style={{ color: 'var(--accent-primary)' }}>Income</span>
           </h1>
         </div>
@@ -161,28 +161,28 @@ const Income = () => {
       </div>
 
       {/* Top Stats */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
-        <div style={{ backgroundColor: '#121212', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
-          <span style={{ color: '#a1a1aa', fontSize: '0.9rem', marginBottom: '1rem' }}>Total Revenue</span>
-          <div style={{ fontSize: '2.5rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: 'white' }}>${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+      <div className="responsive-grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '1.5rem' }}>
+        <div style={{ backgroundColor: 'var(--bg-secondary)', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
+          <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1rem' }}>Total Revenue</span>
+          <div style={{ fontSize: '2.5rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: 'var(--text-primary)' }}>${totalRevenue.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 'auto', paddingTop: '1rem' }}>
             <span style={{ color: '#22c55e', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}><ArrowUpRight size={14} /> Tracking</span>
             <span style={{ color: '#71717a', fontSize: '0.8rem' }}>all time</span>
           </div>
         </div>
 
-        <div style={{ backgroundColor: '#121212', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
-          <span style={{ color: '#a1a1aa', fontSize: '0.9rem', marginBottom: '1rem' }}>Total Orders</span>
-          <div style={{ fontSize: '2.5rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: 'white' }}>{totalOrdersCount}</div>
+        <div style={{ backgroundColor: 'var(--bg-secondary)', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
+          <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1rem' }}>Total Orders</span>
+          <div style={{ fontSize: '2.5rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: 'var(--text-primary)' }}>{totalOrdersCount}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 'auto', paddingTop: '1rem' }}>
             <span style={{ color: '#22c55e', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}><ArrowUpRight size={14} /> Tracking</span>
             <span style={{ color: '#71717a', fontSize: '0.8rem' }}>all time</span>
           </div>
         </div>
 
-        <div style={{ backgroundColor: '#121212', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
-          <span style={{ color: '#a1a1aa', fontSize: '0.9rem', marginBottom: '1rem' }}>Active Subscriptions</span>
-          <div style={{ fontSize: '2.5rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: 'white' }}>{activeSubs}</div>
+        <div style={{ backgroundColor: 'var(--bg-secondary)', borderRadius: '24px', padding: '1.5rem', border: '1px solid rgba(255,255,255,0.05)', display: 'flex', flexDirection: 'column' }}>
+          <span style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '1rem' }}>Active Subscriptions</span>
+          <div style={{ fontSize: '2.5rem', fontWeight: 600, fontFamily: 'var(--font-title)', color: 'var(--text-primary)' }}>{activeSubs}</div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: 'auto', paddingTop: '1rem' }}>
             <span style={{ color: '#22c55e', fontSize: '0.8rem', fontWeight: 'bold', display: 'flex', alignItems: 'center' }}><ArrowUpRight size={14} /> +15.1%</span>
             <span style={{ color: '#71717a', fontSize: '0.8rem' }}>from last month</span>
@@ -191,13 +191,13 @@ const Income = () => {
       </div>
 
       {/* Transactions Table */}
-      <div style={{ backgroundColor: '#121212', borderRadius: '24px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-        <h2 style={{ fontSize: '1.2rem', fontWeight: 600, color: 'white' }}>Recent Checkout Orders</h2>
+      <div style={{ backgroundColor: 'var(--bg-secondary)', borderRadius: '24px', padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <h2 style={{ fontSize: '1.2rem', fontWeight: 600, color: 'var(--text-primary)' }}>Recent Checkout Orders</h2>
         
         {/* Filters */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem', background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '16px', border: '1px solid rgba(255,255,255,0.05)' }}>
           <div style={{ flex: '1', minWidth: '220px' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', marginBottom: '0.75rem', fontWeight: 600 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', marginBottom: '0.75rem', fontWeight: 600 }}>
               <Search size={14} color="var(--accent-primary)" /> Search Orders
             </label>
             <div style={{ position: 'relative' }}>
@@ -205,19 +205,19 @@ const Income = () => {
             </div>
           </div>
           <div style={{ flex: '1', minWidth: '150px' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', marginBottom: '0.75rem', fontWeight: 600 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', marginBottom: '0.75rem', fontWeight: 600 }}>
               <Calendar size={14} color="var(--accent-primary)" /> Order Date
             </label>
             <PremiumDatePicker value={dateFilter} onChange={setDateFilter} placeholder="Any Date" />
           </div>
           <div style={{ flex: '1', minWidth: '150px' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', marginBottom: '0.75rem', fontWeight: 600 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', marginBottom: '0.75rem', fontWeight: 600 }}>
               <Filter size={14} color="var(--accent-primary)" /> Status Filter
             </label>
             <PremiumSelect options={statusOptions} value={statusFilter} onChange={setStatusFilter} placeholder="Select Status" />
           </div>
           <div style={{ flex: '1', minWidth: '150px' }}>
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', marginBottom: '0.75rem', fontWeight: 600 }}>
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', marginBottom: '0.75rem', fontWeight: 600 }}>
               <Layers size={14} color="var(--accent-primary)" /> Plan Type
             </label>
             <PremiumSelect options={planOptions} value={planFilter} onChange={setPlanFilter} placeholder="Select Plan" />
@@ -228,33 +228,33 @@ const Income = () => {
           <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '800px' }}>
             <thead>
               <tr style={{ background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                <th style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', fontWeight: 600 }}>Order ID</th>
-                <th style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', fontWeight: 600 }}>Customer</th>
-                <th style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', fontWeight: 600 }}>Plan</th>
-                <th style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', fontWeight: 600 }}>Amount</th>
-                <th style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', fontWeight: 600 }}>Status</th>
-                <th style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', fontWeight: 600 }}>Date</th>
-                <th style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: '#a1a1aa', fontWeight: 600, textAlign: 'right' }}>Actions</th>
+                <th style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', fontWeight: 600 }}>Order ID</th>
+                <th style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', fontWeight: 600 }}>Customer</th>
+                <th style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', fontWeight: 600 }}>Plan</th>
+                <th style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', fontWeight: 600 }}>Amount</th>
+                <th style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', fontWeight: 600 }}>Status</th>
+                <th style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', fontWeight: 600 }}>Date</th>
+                <th style={{ padding: '1rem 1.5rem', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--text-secondary)', fontWeight: 600, textAlign: 'right' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {isLoading ? (
-                <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center', color: '#a1a1aa' }}>Loading orders...</td></tr>
+                <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading orders...</td></tr>
               ) : filteredOrders.length === 0 ? (
-                <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center', color: '#a1a1aa' }}>No orders match your filters.</td></tr>
+                <tr><td colSpan="7" style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)' }}>No orders match your filters.</td></tr>
               ) : filteredOrders.map((order, idx) => (
                 <tr key={idx} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-                  <td style={{ padding: '1.25rem 1.5rem', color: '#a1a1aa', fontSize: '0.85rem', fontWeight: 600 }}>#ORD-{order.id.toString().padStart(4, '0')}</td>
-                  <td style={{ padding: '1.25rem 1.5rem', color: 'white', fontWeight: 500 }}>
+                  <td style={{ padding: '1.25rem 1.5rem', color: 'var(--text-secondary)', fontSize: '0.85rem', fontWeight: 600 }}>#ORD-{order.id.toString().padStart(4, '0')}</td>
+                  <td style={{ padding: '1.25rem 1.5rem', color: 'var(--text-primary)', fontWeight: 500 }}>
                     <span className="text-truncate" title={order.customer_name} style={{ maxWidth: '150px' }}>{order.customer_name}</span>
                   </td>
-                  <td style={{ padding: '1.25rem 1.5rem', color: '#a1a1aa' }}>
+                  <td style={{ padding: '1.25rem 1.5rem', color: 'var(--text-secondary)' }}>
                     <span className="text-truncate" title={order.plan} style={{ maxWidth: '100px' }}>{order.plan}</span>
                     {order.receipt_image && (
                       <a href={`http://localhost:3000${order.receipt_image}`} target="_blank" rel="noopener noreferrer" style={{ display: 'block', fontSize: '0.75rem', color: 'var(--accent-primary)', marginTop: '0.25rem', textDecoration: 'underline' }}>View Receipt</a>
                     )}
                   </td>
-                  <td style={{ padding: '1.25rem 1.5rem', color: 'white', fontWeight: 600 }}>${parseFloat(order.amount).toFixed(2)}</td>
+                  <td style={{ padding: '1.25rem 1.5rem', color: 'var(--text-primary)', fontWeight: 600 }}>${parseFloat(order.amount).toFixed(2)}</td>
                   <td style={{ padding: '1.25rem 1.5rem' }}>
                     <span style={{
                       background: order.status === 'Confirmed' ? 'rgba(34, 197, 94, 0.1)' : order.status === 'Rejected' ? 'rgba(239, 68, 68, 0.1)' : 'rgba(245, 158, 11, 0.1)',
@@ -264,7 +264,7 @@ const Income = () => {
                       {order.status}
                     </span>
                   </td>
-                  <td style={{ padding: '1.25rem 1.5rem', color: '#a1a1aa', fontSize: '0.85rem' }}>{new Date(order.created_at).toLocaleDateString()}</td>
+                  <td style={{ padding: '1.25rem 1.5rem', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>{new Date(order.created_at).toLocaleDateString()}</td>
                   <td style={{ padding: '1.25rem 1.5rem', textAlign: 'right', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
                     {order.status === 'Pending' ? (
                       <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
@@ -301,7 +301,7 @@ const Income = () => {
               <button className="btn btn-secondary" onClick={() => setRejectModal({ isOpen: false, orderId: null, reason: '' })}>Cancel</button>
               <button 
                 className="btn btn-primary" 
-                style={{ background: '#ef4444', color: 'white', border: 'none' }}
+                style={{ background: '#ef4444', color: 'var(--text-primary)', border: 'none' }}
                 disabled={!rejectModal.reason.trim()}
                 onClick={() => handleStatusChange(rejectModal.orderId, 'Rejected', rejectModal.reason)}
               >
@@ -315,13 +315,13 @@ const Income = () => {
       {/* Payment Methods Fullscreen Modal */}
       {paymentModalOpen && (
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.95)', backdropFilter: 'blur(10px)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 9999, overflowY: 'auto', padding: '2rem' }}>
-          <div className="card animate-fade-in" style={{ padding: '3rem', width: '100%', maxWidth: '800px', background: '#121212', border: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
+          <div className="card animate-fade-in" style={{ padding: '3rem', width: '100%', maxWidth: '800px', background: 'var(--bg-secondary)', border: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
             <button 
               onClick={() => setPaymentModalOpen(false)}
-              style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'none', border: 'none', color: '#a1a1aa', fontSize: '1.5rem', cursor: 'pointer' }}
+              style={{ position: 'absolute', top: '1.5rem', right: '1.5rem', background: 'none', border: 'none', color: 'var(--text-secondary)', fontSize: '1.5rem', cursor: 'pointer' }}
             >×</button>
             
-            <h2 style={{ fontSize: '2rem', fontFamily: 'var(--font-title)', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.5rem', color: 'white' }}>
+            <h2 style={{ fontSize: '2rem', fontFamily: 'var(--font-title)', fontWeight: 800, textTransform: 'uppercase', marginBottom: '0.5rem', color: 'var(--text-primary)' }}>
               Payment Methods
             </h2>
             <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Manage the payment methods available for users during checkout.</p>
@@ -341,15 +341,15 @@ const Income = () => {
             </form>
 
             <div>
-              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'white', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Active Methods</h3>
+              <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Active Methods</h3>
               {paymentMethods.length === 0 ? (
-                <div style={{ padding: '2rem', textAlign: 'center', color: '#a1a1aa', border: '1px dashed rgba(255,255,255,0.1)', borderRadius: '12px' }}>No payment methods added yet.</div>
+                <div style={{ padding: '2rem', textAlign: 'center', color: 'var(--text-secondary)', border: '1px dashed var(--border-color)', borderRadius: '12px' }}>No payment methods added yet.</div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                   {paymentMethods.map(method => (
-                    <div key={method.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.03)', padding: '1rem 1.5rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div key={method.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'var(--bg-tertiary)', padding: '1rem 1.5rem', borderRadius: '12px', border: '1px solid var(--border-color)' }}>
                       <div>
-                        <div style={{ fontWeight: 600, color: 'white', marginBottom: '0.25rem' }}>{method.name}</div>
+                        <div style={{ fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>{method.name}</div>
                         <div style={{ color: 'var(--accent-primary)', fontSize: '0.9rem', letterSpacing: '1px', fontFamily: 'monospace' }}>{method.rib}</div>
                       </div>
                       <button onClick={() => handleDeletePaymentMethod(method.id)} style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#ef4444', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '0.5rem', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
